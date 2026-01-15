@@ -1,0 +1,9 @@
+Host cremi-gateway
+    Hostname sshproxy.emi.u-bordeaux.fr
+    User argomes
+
+Host cremi
+    Hostname boursouf.emi.u-bordeaux.fr
+    User argomes
+    ProxyJump cremi-gateway
+    ForwardAgent yes
