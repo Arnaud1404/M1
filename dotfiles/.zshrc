@@ -127,7 +127,7 @@ alias zshconfig="vi ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias ls='eza --icons --group-directories-first'
-alias ll='eza --icons --group-directories-first -l'
+alias ll='eza --icons --group-directories-first -al'
 
 alias updatefox='curl -o /home/arno/.config/mozilla/firefox/n50ymb4j.default-release/user.js \
 https://raw.githubusercontent.com/yokoffing/BetterFox/main/user.js'
