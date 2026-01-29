@@ -132,8 +132,12 @@ alias ll='eza --icons --group-directories-first -al'
 alias updatefox='curl -o /home/arno/.config/mozilla/firefox/n50ymb4j.default-release/user.js \
 https://raw.githubusercontent.com/yokoffing/BetterFox/main/user.js'
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Load correct p10k config
+if [[ -n "$TERMUX_VERSION" ]]; then
+    [[ ! -f ~/M1/dotfiles/p10k.mobile.zsh ]] || source ~/M1/dotfiles/p10k.mobile.zsh
+else
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
 
 # Only initialize zoxide if it is installed
 if command -v zoxide > /dev/null 2>&1; then
