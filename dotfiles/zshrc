@@ -134,7 +134,7 @@ https://raw.githubusercontent.com/yokoffing/BetterFox/main/user.js'
 
 # Load correct p10k config
 if [[ -n "$TERMUX_VERSION" ]] || [[ "$LC_MOBILE_SESSION" == "true" ]]; then
-    [[ ! -f ~/M1/dotfiles/p10k.mobile.zsh ]] || source ~/M1/dotfiles/p10k.mobile.zsh
+    [[ ! -f ~/.p10k.mobile.zsh ]] || source ~/.p10k.mobile.zsh
 else
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
