@@ -85,7 +85,7 @@ ZSH_WEB_SEARCH_ENGINES=(
 
 plugins=(
 	git
-  z
+ 	z
 	sudo
 	web-search
 	fzf
@@ -93,10 +93,16 @@ plugins=(
 	zsh-syntax-highlighting
  )
 
-source $ZSH/oh-my-zsh.sh
+# Only load Oh-My-Zsh if the file actually exists
+if [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
+  source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+fi
 
-# Source python venv
-source ~/.venv/bin/activate
+# Only activate the virtual environment if it exists
+if [[ -f "$HOME/.venv/bin/activate" ]]; then
+  source "$HOME/.venv/bin/activate"
+fi
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
