@@ -150,3 +150,7 @@ if command -v zoxide > /dev/null 2>&1; then
     eval "$(zoxide init zsh)"
 fi
 
+
+# Load M1 Addons
+source /data/data/com.termux/files/home/M1/zsh_addons/powerlevel10k/powerlevel10k.zsh-theme
+source /data/data/com.termux/files/home/M1/zsh_addons/zsh-autosuggestions/zsh-autosuggestions.zsh
