@@ -2,3 +2,5 @@
 asm
 loop
 factorial
+fibonacci
+strcmp
