@@ -12,6 +12,6 @@ fibonacci_loop:
     incl %ecx # Increment n
     jmp fibonacci_loop
 fibonacci_end:
-    movl $1, %eax   # syscall: exit (32-bit)
     movl $0, %ebx   # status: 0
-    int $0x80
+    movl $1, %eax   # syscall: exit (32-bit)
+    int $0x80 # Kernel call

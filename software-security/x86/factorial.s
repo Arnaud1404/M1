@@ -1,5 +1,5 @@
-.globl _start
-_start:
+.globl main
+main:
     movl $1, %ecx   # Initialize counter n = 1
     movl $1, %eax   # Initialize factorial result to 1
 factorial_loop:

@@ -1,6 +1,8 @@
 # x86 assembly basics (AT&T syntax)
 
-Compile with `gcc -Wall -Wextra -m64 -g -o asm asm.s`
+Compile with `gcc -Wall -Wextra -m64 -g -o asm asm.s` for 64 bit
+`gcc -Wall -Wextra -m32 -nostdlib -no-pie -g -o asm asm.s`
+
 
 Use -m32 for 32 bit
 
@@ -53,6 +55,7 @@ popl %esi       # Pop %esi off the stack (restore)
         - **Linker Warning**: Defaults to `_start`. If you use `main`, the linker warns "cannot find entry symbol".
         - **Segfault on Return**: `ret` crashes because there is no return address on the stack (the kernel *jumps* to the entry point, it doesn't *call* it). You must use the `exit` syscall.
         - **Smaller Binary**: Removes C runtime overhead.
+    - `-no-pie`: Disable Position Independent Executable. Required for 32-bit code using absolute addressing (like `movl $label, %reg`) to avoid linker errors about text relocations.
 
 ## GDB commands
 
@@ -87,11 +90,11 @@ To compare two memory blocks, use `repe cmps` with a size suffix.
 ### Example Snippet
 
 ```asm
-.section .data
+.data
 str1: .asciz "Hello"
 str2: .asciz "Hello"
 
-.section .text
+.text
 leaq str1, %rsi    # Source
 leaq str2, %rdi    # Destination
 movq $5, %rcx      # Length
