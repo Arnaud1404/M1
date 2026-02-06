@@ -8,9 +8,9 @@ str2:
     len2 = . - str2 # String length
 
 .text # Text section
-.globl _start
+.globl main
 
-_start:
+main:
     movl $len1, %ecx # 3rd arg: string length
     movl $str2, %edi # 2nd arg: string 2
     movl $str1, %esi # 1st arg: string 1
