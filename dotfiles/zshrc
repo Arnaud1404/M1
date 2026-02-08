@@ -129,11 +129,12 @@ fi
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="vi ~/.zshrc"
+alias zshconfig="vim ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias ls='eza --icons --group-directories-first --git'
+alias ls='eza --icons --group-directories-first'
 alias ll='eza --icons --group-directories-first -al --git'
+alias lt='eza -a --tree --level=2 --icons --git-ignore'
 
 alias updatefox='curl -o /home/arno/.config/mozilla/firefox/n50ymb4j.default-release/user.js \
 https://raw.githubusercontent.com/yokoffing/BetterFox/main/user.js'
