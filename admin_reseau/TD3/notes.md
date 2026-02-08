@@ -99,15 +99,43 @@ Scénario : Une victime se connecte en Telnet (non chiffré).
 L'attaquant écoute le réseau.
 
 ```python
-def process_packet(packet):
-    """Afficher les données"""
-    if packet.haslayer(Raw):
-        # On affiche le contenu décodé (ou brut)
-        print(packet[Raw].load)
-
-# Lancer le sniff sur le port 23
-# prn : fonction appelée à chaque paquet capturé
-sniff(filter="tcp port 23", prn=process_packet, store=0)
+# On capture 50 paquets et on les stocke dans une variable
+paquets = sniff(filter="tcp port 23", count=50)
+	
+# On écrit tout le bloc à la fin
+wrpcap("telnet_batch.pcap", paquets)
+print("Fichier sauvegardé !")
 ```
 
-> Lancer avec telnet 192.168.0.2
+---
+
+## EXO 2 : Capture de trafic pour l'analyse d'une attaque ARP
+
+Le but de cet exercice est de capturer le trafic réseau lors d'une simulation d'attaque ARP afin de pouvoir l'analyser.
+
+### 1. Lancer la capture avec `tcpdump`
+
+`tcpdump` est un analyseur de paquets en ligne de commande. Il permet de capturer le trafic en direct.
+
+```bash
+sudo tcpdump -i eth0 -n -w /tmp/log.pcap -s 1500
+```
+
+**Explication de la commande :**
+*   `sudo`: La capture de paquets nécessite des privilèges administrateur.
+*   `-i eth0` : **Interface**. On écoute sur l'interface réseau `eth0`.
+*   `-n` : **Numérique**. Pour ne pas résoudre les adresses IP en noms de domaine (DNS), ce qui est plus rapide.
+*   `-w /tmp/log.pcap` : **Write**. On écrit la capture dans un fichier nommé `log.pcap`.
+*   `-s 1500` : **Snapshot Length**. On capture les 1500 premiers octets de chaque paquet pour s'assurer de ne rien manquer.
+
+### 2. Déplacer le fichier de capture (si nécessaire)
+
+Cette commande est utile si vous travaillez dans une machine virtuelle et que vous voulez accéder au fichier depuis votre machine hôte.
+
+```bash
+mv /tmp/log.pcap /mnt/host
+```
+
+### 3. Analyser le fichier avec Wireshark
+
+Enfin, ouvrez le fichier `log.pcap` avec Wireshark, un analyseur graphique, pour inspecter les paquets ARP et comprendre le déroulement de l'attaque.
