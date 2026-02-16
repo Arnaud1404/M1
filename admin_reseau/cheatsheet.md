@@ -13,6 +13,21 @@ Toujours faire un schéma du réseau sur papier
     ifconfig eth0 172.16.0.4/24 
     ip addr add 172.16.0.4/24 dev eth0 brd +
 
+## VLANs
+```bash
+#VLAN 100
+auto eth0.100
+iface eth0.100 inet static
+    address 134.27.0.3/24
+    vlan-raw-device eth0
+
+#VLAN 200
+auto eth0.200
+iface eth0.200 inet static
+    address 192.12.0.3/24
+    vlan-raw-device eth0
+```
+
 ## Config IP at boot time (see `man interfaces`)
     edit /etc/network/interfaces and set static IP
 
@@ -21,7 +36,6 @@ iface eth1 inet static
     address 192.168.1.2/24
     gateway 192.168.1.1
 ```
-
 apply config with `/etc/init.d/networking restart`
 
 ## Make broadcasts work
