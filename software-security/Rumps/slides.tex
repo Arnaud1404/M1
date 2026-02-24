@@ -53,7 +53,7 @@
         
         Pendant près de 50 ans, les agences de renseignement américaine (CIA) et ouest-allemande (BND) ont secrètement possédé la société suisse Crypto AG, qui était alors le leader mondial incontesté de la vente d'équipements de chiffrement et de sécurité des télécommunications pour les diplomates et tous les gouvernements.
         
-        L'histoire que je vais vous raconter aujourd'hui montre que la vulnérabilité technique au sein de ces machines n'était pas un malencontreux bug d'implémentation. C'était une véritable backdoor algorithmique conçue dès le départ par des mathématiciens pour intercepter facilement les communications du monde entier.
+        L'histoire que je vais vous raconter aujourd'hui montre que la vulnérabilité technique au sein de ces machines n'était pas une simple erreur de code. C'était une véritable porte dérobée (backdoor) mathématique, créée dès le départ pour écouter les communications du monde entier.
     }
 \end{frame}
 
@@ -139,7 +139,7 @@
         Pourquoi le monde entier a-t-il acheté ces machines ? D'abord, à cause de la Suisse. Crypto AG bénéficiait de l'aura de neutralité politique, ce qui en faisait le fournisseur idéal.
         
         Ensuite, le produit était matériel ("hardware"). Comme vous le voyez ici à droite avec les machines inventées par Boris Hagelin, il s'agissait de blocs lourds, considérés inviolables physiquement.
-        Les algorithmes de la série Cryptomatic (HC-500) étaient gravés dans le silicium : aucune spécification ou documentation mathématique n'était fournie. C'est l'essence même de la "Security by Obscurity", et c'est ce point qui a attiré mon attention lors de mon analyse contextuelle sur le domaine.
+        Les algorithmes de la série Cryptomatic (HC-500) étaient gravés dans le silicium : aucune spécification ou documentation mathématique n'était fournie. C'est le principe même de la "Security by Obscurity", un concept très dangereux en cryptographie.
     }
 \end{frame}
 
@@ -232,9 +232,9 @@
     \textit{Conséquence globale : Durant toute la Guerre Froide, la CIA a écouté plus de 120 pays sans la moindre résistance topologique.}
 
     \note{
-        Je voudrais également aborder le Moyen-Orient. Lors de la Révolution Iranienne de 1979 et de la crise des otages, le régime islamiste utilise massivement les HC-500 "Version B" léguées par le Shah d'Iran. Le président américain Jimmy Carter déchiffre jour par jour les tractations internes du gouvernement de l'Ayatollah Khomeini... alors même que ceux-ci négocient contre lui !
+        Je voudrais également aborder le Moyen-Orient. Lors de la Révolution Iranienne de 1979 et de la crise des otages, le régime islamiste utilise massivement les HC-500 "Version B" léguées par le Shah d'Iran. Le président américain Jimmy Carter déchiffre jour par jour les discussions internes du gouvernement de l'Ayatollah Khomeini... alors même que ceux-ci négocient contre lui !
         
-        Plus tard, en 1986, lors de la bombe posée dans la discothèque berlinoise "La Belle", le président Ronald Reagan ordonne le bombardement de la Libye. Pour justifier cette frappe, l'administration américaine évoque des "preuves absolues". Ces preuves irréfutables s'avèrent être les câbles libyens chiffrés (des "Félicitations pour Berlin" envoyées de Tripoli) déchiffrés en quelques secondes par la NSA grâce, une fois de plus, à l'immunité défaillante de leurs machines suisses.
+        Plus tard, en 1986, lors de la bombe posée dans la discothèque berlinoise "La Belle", le président Ronald Reagan ordonne le bombardement de la Libye. Pour justifier cette frappe, l'administration américaine évoque des "preuves absolues". Ces preuves irréfutables s'avèrent être les câbles libyens chiffrés (des "Félicitations pour Berlin" envoyées de Tripoli) déchiffrés en quelques secondes par la NSA grâce, une fois de plus, à la faille intentionnelle de leurs machines suisses.
         
         Pendant un demi-siècle, ce fut tout l'échiquier mondial de la Guerre Froide qui tombait, de manière transparente.
     }
@@ -334,22 +334,22 @@
 \section{La Faille : Minerva}
 
 \begin{frame}{Le Besoin de Non-Linéarité}
-    Toutefois, la cryptanalyse algébrique (via l'\textbf{Algorithme de Berlekamp-Massey}) permet de reconstruire l'état entier d'un LFSR pur et linéaire en n'observant que $2l$ bits, brisant le chiffrement en \textbf{temps polynomial} $\mathcal{O}(l^2)$.
+    Comme vu en cours, un LFSR brut et linéaire est facilement cassable en \textbf{temps polynomial} $\mathcal{O}(l^2)$ par l'\textbf{Algorithme de Berlekamp-Massey}.
 
     \vspace{0.5cm}
-    Pour contrecarrer cela, Crypto AG utilise la combinaison de multiples registres (R1, R2, R3) mixés via un composant matériel spécifique. C'est l'architecture dite du \textbf{LFSR Filtré} (ou Combinaison non-linéaire).
+    Pour contrecarrer cela, Crypto AG utilise la combinaison de multiples registres (R1, R2, R3) mixés via un composant matériel spécifique. C'est l'architecture dite du \textbf{LFSR Filtré}.
 
     \begin{block}{Fonction de filtrage mathématique}
     $$z_t = g(S^{(t)}_1, S^{(t)}_2, \dots, S^{(t)}_k)$$
-    La fonction de combinaison \textbf{$g$} doit être strictement non-linéaire (ex: portes mémoire AND/OR en silicium) pour rompre la structure algébrique d'un simple polynôme $f(X)$.
+    La fonction de combinaison \textbf{$g$} doit être non-linéaire pour sécuriser le signal et esquiver cette cryptanalyse.
     \end{block}
 
     \note{
-        Toutefois, utiliser un tel registre purement linéaire reste, en mathématiques, très faible. Si je reprends l'algorithme de Berlekamp-Massey, avec seulement 2 fois sa longueur en bits écoutés sur la ligne, un attaquant peut reconstituer le polynôme complet et casser le chiffre en théorie avec une complexité en O de l au carré !
+        Toutefois, utiliser un tel registre purement linéaire reste très faible. Comme nous l'avons étudié, l'algorithme de Berlekamp-Massey permet de casser ce type de registre assez facilement, avec une complexité en O de l au carré.
         
-        Pour se protéger, les équipes de Crypto AG ne laissaient pas la sortie d'un registre linéaire unique alimenter le canal de chiffrement. Dans ma modélisation, j'ai voulu vous rappeler l'architecture du "LFSR filtré".
+        Pour se protéger, les équipes de Crypto AG ne laissaient pas la sortie d'un registre linéaire unique alimenter le canal de chiffrement. Ils ont rajouté une couche de protection : l'architecture du "LFSR filtré", également détaillée dans notre chapitre.
         
-        La suite chiffrante $z_t$ subit une application non-linéaire $g$, rendue possible par des portes AND et OR entremêlées dans les puces. Cette logique brise la structure algébrique pure, garantissant de fait la protection du signal en environnement réel.
+        La suite chiffrante subit une application non-linéaire appelée $g$. Cette logique vient rompre la structure algébrique parfaite du polynôme d'origine pour que l'algorithme de Berlekamp-Massey ne fonctionne plus.
     }
 \end{frame}
 
@@ -374,38 +374,12 @@
         
         Minerva consiste concrètement à manipuler cette fameuse fonction de filtrage $g$ pour rater sciemment le critère d'Immunité de Corrélation. 
         
-        Cela signifie mathématiquement que la probabilité que le bit chiffrant $z_t$ soit directement corrélé au bit généré en profondeur par le mini registre $L1$ n'est pas de 50\%. L'attaque exploite ce biais statistique $\epsilon > 0$. Même si la séquence a une énorme période, elle contient de manière déterministe un murmure constant de l'état interne de ses propres engrenages. C'est le bruit qui permet l'écoute en clair !
-    }
-\end{frame}
-
-\begin{frame}{Deep Dive Mathématique : L'Espérance Algébrique $\epsilon$}
-    \small
-    Pour répondre aux critères académiques, formalisons cette défaillance de la combinatoire booléenne.
-
-    \vspace{0.1cm}
-    Une fonction $g: \mathbb{F}_2^k \rightarrow \mathbb{F}_2$ est \textbf{corrélation-immune d'ordre $m$} si sa sortie est statistiquement indépendante de toute sous-partie de $m$ bits de l'entrée.
-
-    \vspace{0.1cm}
-    \begin{alertblock}{La Brisure Structurée de Minerva}
-        Soit $x = (x_1, \dots, x_k)$ l'état vectoriel des LFSR entrants. La probabilité d'un bit de sortie :
-        $$ P(g(x) = x_i) = \frac{1}{2} + \epsilon_{\text{NSA}} $$
-        Pour que l'agent de la NSA isole un signal mesurable, la conception algorithmique s'assure que :
-        $$ \epsilon_{\text{NSA}} \gg \frac{1}{\sqrt{\text{Taille du Cryptogramme capté}}} $$
-    \end{alertblock}
-
-    \vspace{0.1cm}
-    Le théorème de la limite centrale permet à l'espérance de l'état interne $x_i$ de percer le "bruit blanc" si le télégramme diplomatique est suffisamment long, révélant la trahison dans le silicium.
-
-    \note{
-        Pour clôturer l'aspect analytique, je voulais plonger dans les mathématiques mêmes de l'Immunité. Une fonction booléenne G d'un LFSR filtré "idéal" devrait être corrélation-immune d'ordre M : cela signifie que même si je connais M sous-registres, je ne devrais obtenir absolument aucune indication statistique sur sa sortie totale.
-        
-        Mais Minerva vient créer une "Brisure Structurée" dans cette algèbre de Boole. En forçant intentionnellement un certain jeu de portes logiques AND et OR, la NSA crée la distribution faussée affichée ici. La variance de la fonction ne tend plus vers l'équilibre parfait, la fameuse pièce truquée donne "pile" un peu trop souvent.
-        
-        Comme je l'ai mis en évidence ici, pour que l'espion parvienne à exploiter cette erreur, il faut que le biais $epsilon$ fixé dans la machine par le fondeur suisse soit largement supérieur à un sur la racine carrée du message radio intercepté. Sur des énormes flux télex diplomatiques durant de longues heures, le théorème de la limite centrale de l'attaquant devient une arme de destruction massive du secret. Le bruit s'est purifié de lui-même.
+        Cela signifie mathématiquement que la probabilité que le bit chiffrant $z_t$ soit directement corrélé au bit généré en profondeur par le mini registre $L1$ n'est pas de 50\%. L'attaque exploite ce biais statistique $\epsilon > 0$. Même si la séquence a une énorme période, elle contient de manière déterministe un murmure constant de l'état interne de ses propres engrenages. C'est ce défaut qui permet d'écouter les messages en clair !
     }
 \end{frame}
 
 % ==============================================================================
+
 % 5. ATTACK COMPLEXITY
 % ==============================================================================
 \section{L'Attaque (Divide \& Conquer)}
@@ -441,12 +415,12 @@
     Il compare statistiquement chaque état candidat du premier registre unitaire $L_1$ avec le texte capté. La vraie clé se dégagera massivement du bruit.
 
     \note{
-        Pour bien saisir toute la ruse : regardons la rupture de symétrie calculatoire.
+        Pour bien saisir l'astuce : regardons la différence de temps de calcul.
         
         Sans la faille Minerva, je devrais attaquer l'espace gigantesque de l'état combiné de tous les registres. L'ordre de grandeur est la taille exponentielle de la somme des registres (O de 2 puissance la somme). En brute force dans les années 70, ces sommes prenaient des siècles incalculables.
         
         Mais avec Minerva, je bascule sur l'approche de la corrélation et du concept de "Divide and Conquer". Je commence ma recherche sur chaque petit registre que j'isole grâce aux corrélations mathématiques induites par le biais epsilon.
-        Le temps de craquage dégringole vertigineusement de la "somme au produit des registres combinés", à une simple "somme linéaire" des exponentielles, rendant le déchiffrement quasiment instantané pour la CIA.
+        Le temps de calcul chute brutalement de la "somme au produit des registres combinés", à une simple "somme linéaire" des exponentielles, rendant le déchiffrement quasiment instantané pour la CIA.
     }
 \end{frame}
 
@@ -471,7 +445,7 @@
 
         % Annotations Complexities
         \node[below=0.3cm of attack1, text=red, font=\large] {$\mathcal{O}(2^{l_1})$};
-        \node[below=0.3cm of attack2, text=red, font=\large] {$\mathcal{O}(2^{l_2})$};
+        \node[below=0.3cm of attack2, fill=white, inner sep=1pt, text=red, font=\large] {$\mathcal{O}(2^{l_2})$};
     \end{tikzpicture}
     }
     \end{center}
@@ -490,9 +464,80 @@
         
         A l'étape 1, j'intercepte le flux. En modélisant le "plaintext probable" (comme on l'étudie classiquement, de l'en-tête diplomatique redondante du format "To Mr Ambassador"), je réalise le calcul du XOR exclusif.
         
-        Une fois cette information de base captée, à vide, mon supercalculateur compare l'état du tout premier registre simulé aux bits capturés, assisté par l'analyse algorithmique de ce fameux "bruit" statistique. Quand une clé partielle concorde, je l'isole par le pic de corrélation énorme (ici en étape 2). 
+        Une fois cette information de base captée, à vide, mon supercalculateur compare l'état du tout premier registre simulé aux bits capturés, assisté par l'analyse algorithmique de ce fameux "bruit" statistique. Quand une clé partielle concorde, je l'isole par le fort pic de corrélation (ici en étape 2). 
         
-        Je soustrait ensuite "l'influence" (étape 3) de ce premier module cassé, purifie les calculs suivants, et relance simplement cette cascade pour les registres L2 puis L3 ! Le château de cartes s'étiole littéralement de l'intérieur, de registre en registre. La cryptographie est désossée !
+        Je soustrait ensuite "l'influence" (étape 3) de ce premier module cassé, purifie les calculs suivants, et relance simplement cette cascade pour les registres L2 puis L3 ! Le système s'effondre de l'intérieur, de registre en registre. Le chiffrement est cassé !
+    }
+\end{frame}
+
+% ==============================================================================
+% 6. LA CHUTE DE L'EMPIRE CRYPTO AG (HANS BÜHLER)
+% ==============================================================================
+\section{La Chute d'Operation Rubicon}
+
+\begin{frame}{1992 : La Faille Humaine (L'Affaire Hans Bühler)}
+    \begin{columns}
+        \column{0.6\textwidth}
+        \textbf{L'Arrestation en Iran}
+        \begin{itemize}
+            \item Hans Bühler, ingénieur commercial star de Crypto AG, est brusquement arrêté à Téhéran en 1992.
+            \item Le gouvernement Iranien suspecte l'équipement d'être compromis suite à des fuites liées à des assassinats politiques.
+        \end{itemize}
+
+        \vspace{0.3cm}
+        \textbf{L'Opération Démasquée}
+        \begin{itemize}
+            \item La CIA et le BND refusent d'intervenir pour protéger la couverture.
+            \item Crypto AG finit par payer une étrange rançon/caution de 1\text{M} \$ à l'Iran, puis licencie Bühler.
+            \item L'attention médiatique fait s'écrouler le mythe inviolable de la "neutralité suisse".
+        \end{itemize}
+
+        \column{0.4\textwidth}
+        \begin{center}
+            \begin{alertblock}{La Couverture Parfaite}
+                Bühler, comme l'immense majorité des ingénieurs suisses de Crypto AG, ignorait totalement la manipulation des schémas d'immunité des LFSR par Minerva !
+            \end{alertblock}
+        \end{center}
+    \end{columns}
+
+    \note{
+        Mais alors, si le système était mathématiquement pur en surface, comment l'empire secret Rubicon s'est-il finalement effondré ?
+
+        Ironiquement pour nous analystes d'algorithmes, ce n'est pas un audit cryptographique qui a révélé la faille, mais une grossière erreur humaine ! En 1992, Hans Bühler, un des vendeurs phares de Crypto AG qui vendait ces machines au Moyen-Orient, est brusquement emprisonné par l'Iran. Les iraniens s'étaient rendus compte que l'Ouest anticipait de manière trop miraculeuse leurs frappes terroristes et politiques, et ont logiquement pointé du doigt l'intégrité de ces machines suisses qu'on leur avait lourdement facturées.
+
+        Bühler, qui n'était pas au courant de la fraude, reste emprisonné neuf mois. La CIA a catégoriquement refusé de lever le petit doigt pour ne pas "griller" la couverture technologique. Dès sa libération sous caution, ce traitement injuste le poussera à alerter la presse germanique. De fil en aiguille, les journalistes d'investigation trouveront la relation cachée entre l'usine de Zoug et le BND à Munich. Le secret industriel du siècle venait de s'éteindre.
+    }
+\end{frame}
+
+\begin{frame}{2020 : La Déclassification et le Washington Post}
+    \begin{columns}
+        \column{0.55\textwidth}
+        \textbf{Le Secret Révélé (\#CRYPTOLEAKS)}
+        \begin{itemize}
+            \item En Février 2020, une enquête conjointe du \textit{Washington Post} (USA), de la \textit{ZDF} (ALL) et de \textit{SRF} (SUI) dévoile l'entièreté du scandale.
+            \item Ils publient des documents de la CIA déclassifiés, prouvant que de 1970 à 1993, la quasi-totalité des communications sécurisées mondiales étaient lues par la NSA.
+        \end{itemize}
+
+        \vspace{0.3cm}
+        \textbf{Le Coup de Maître}
+        \begin{itemize}
+            \item Un rapport interne de la CIA décrit l'opération Rubicon comme "Le coup de maître du renseignement du siècle".
+        \end{itemize}
+
+        \column{0.45\textwidth}
+        \begin{center}
+            \includegraphics[height=3.5cm]{images/hagelin.jpg}\\
+            \vspace{0.1cm}
+            \small \textit{Machine classique Hagelin réputée inviolable.}
+        \end{center}
+    \end{columns}
+
+    \note{
+        Pour conclure définitivement sur ce pan d'histoire, comment a-t-on la certitude absolue de la véracité de cette incroyable opération ?
+
+        En Février 2020 (il y a à peine quelques années), une enquête coup de poing mondiale entre le Washington Post, la télévision allemande et la télévision suisse ont publié ce qu'ils appellent les "Cryptoleaks". Des documents top-secrets de la CIA ont été déclassifiés, et ont formellement prouvé que de 1970 jusqu'à la fin de la guerre froide, ce duo contrôlait plus de 40\% des flux mondiaux cryptés.
+
+        Un rapport interne de l'agence va même jusqu'à qualifier Rubicon de "coup de maître du renseignement du siècle". La société Crypto AG a finalement été liquidée en 2018. Des décennies de communications ultra-secrètes ont été aspirées silencieusement, le tout à cause d'un décalage mathématique subtil sur un polynome de LFSR.
     }
 \end{frame}
 
@@ -536,16 +581,22 @@
 
     \vspace{1cm}
     \normalsize
-    \textit{"In hardware cryptography, Trust but Verify...\\Or rather, Trust no one and Open-Source everything."}
+    \textit{"Trust, but Verify."}\\
+    \vspace{0.2cm}
+    \small -- \textbf{Ronald Reagan} (Proverbe des sommets sur le nucléaire, Guerre Froide)
+    
+    \vspace{0.5cm}
+    \normalsize
+    \textit{Ou plutôt aujourd'hui : "Trust no one, and Open-Source everything."}
 
     \note{
-        J'arrivais donc à l'irréfutable conclusion que l'Opération Rubicon sonne le glas définitif du concept pernicieux de "Security by Obscurity".
+        J'arrivais donc à l'irréfutable conclusion que l'Opération Rubicon marque la fin définitive du concept dangereux de "Security by Obscurity".
         
-        L'histoire vient ici nous démontrer rudement que confier le secret de communications étatiques à un matériel propriétaire et exclusif non certifié de façon ouverte – même Suisse ! – ouvre la porte aux backdoors algorithmiques d'échelle cataclysmique.
+        L'histoire vient ici nous démontrer rudement que confier le secret de communications étatiques à un matériel propriétaire et exclusif non certifié de façon ouverte – même Suisse ! – ouvre la porte à des failles à l'échelle mondiale.
         
         Je suis intimement convaincu qu'en tant que professionnels de la SSI de demain, seule l'ouverture public ("Open-Source algorithms" du type AES ou standards NIST certifiés), associée au contrôle d'audit de sécurité des communautés mathématiques, pourra empêcher ce type de vulnérabilités ! "Trust no one".
         
-        Je vous remercie vivement pour m'avoir écouté pendant ces 15 minutes. N'hésitez-pas si vous avez des questions sur l'algorithmique LFSR, la notion de Corrélation ou même sur cette rocambolesque affaire d'espionnage, je serai ravi d'y répondre. 
+        Je vous remercie vivement pour m'avoir écouté pendant ces 15 minutes. N'hésitez-pas si vous avez des questions sur l'algorithmique LFSR, la notion de Corrélation ou même sur cette incroyable affaire d'espionnage, je serai ravi d'y répondre. 
     }
 \end{frame}
 
