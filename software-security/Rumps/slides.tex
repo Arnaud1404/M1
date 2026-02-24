@@ -278,35 +278,62 @@
 
     \vspace{0.3cm}
     \begin{center}
-    \resizebox{0.9\linewidth}{!}{
-    \begin{tikzpicture}[thick]
-        % LFSR Boxes
-        \draw (0,0) rectangle (1.5,1) node[pos=.5] {$S_{0}$};
-        \draw (1.5,0) rectangle (3,1) node[pos=.5] {$S_{1}$};
-        \draw (3,0) rectangle (4.5,1) node[pos=.5] {$\dots$};
-        \draw (4.5,0) rectangle (6,1) node[pos=.5] {$S_{l-2}$};
-        \draw (6,0) rectangle (7.5,1) node[pos=.5] {$S_{l-1}$};
+    \resizebox{0.8\linewidth}{!}{
+    \begin{tikzpicture}[thick, node distance=0.8cm]
+        % Styles for uniform circles - Final Tightening
+        \tikzset{
+            multiplier/.style={draw, circle, inner sep=0pt, minimum size=0.55cm, font=\small},
+            xor/.style={draw, circle, inner sep=0pt, minimum size=0.4cm}
+        }
+
+        % Register Cells - Slightly shorter
+        \node[draw, minimum width=1.4cm, minimum height=0.7cm] (sL-1) at (0,0) {$S_{\ell-1}^{(t)}$};
+        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of sL-1] (sL-2) {$S_{\ell-2}^{(t)}$};
+        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of sL-2] (dots1) {$\dots$};
+        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of dots1] (dots2) {$\dots$};
+        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of dots2] (dots3) {$\dots$};
+        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of dots3] (s1) {$S_{1}^{(t)}$};
+        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of s1] (s0) {$S_{0}^{(t)}$};
+
+        % Multipliers (Circles) - Tighter vertical gap
+        \node[multiplier, below=0.4cm of sL-1] (c1) {$c_1$};
+        \node[multiplier, below=0.4cm of sL-2] (c2) {$c_2$};
+        \node[multiplier, below=0.4cm of s1] (cL-1) {$c_{\ell-1}$};
+        \node[multiplier, below=0.4cm of s0] (cL) {$c_\ell$};
+
+        % XOR Gates (Circles with Cross) - Tighter vertical gap
+        \node[xor, below=0.4cm of c1] (x1) {$\oplus$};
+        \node[xor, at={(c2 |- x1)}] (x2) {$\oplus$};
+        \node[xor, at={(cL-1 |- x1)}] (xL-1) {$\oplus$};
         
-        % Taps
-        \draw[-{Latex[length=3mm]}] (0.75,0) -- (0.75,-1.5) node[below] {$c_1$};
-        \draw[-{Latex[length=3mm]}] (5.25,0) -- (5.25,-1.5) node[below] {$c_{l-1}$};
-        \draw[-{Latex[length=3mm]}] (6.75,0) -- (6.75,-1.5) node[below] {$c_l$};
+        % Dotted XOR line
+        \draw[dotted, thick] (x2) -- (xL-1);
+
+        % Connections: Cells to Multipliers
+        \draw[-{Latex[length=2mm]}] (sL-1) -- (c1);
+        \draw[-{Latex[length=2mm]}] (sL-2) -- (c2);
+        \draw[-{Latex[length=2mm]}] (s1) -- (cL-1);
+        \draw[-{Latex[length=2mm]}] (s0) -- (cL);
+
+        % Connections: Multipliers to XORs
+        \draw[-{Latex[length=2mm]}] (c1) -- (x1);
+        \draw[-{Latex[length=2mm]}] (c2) -- (x2);
+        \draw[-{Latex[length=2mm]}] (cL-1) -- (xL-1);
         
-        % XOR operations horizontally
-        \node[draw, circle, inner sep=2pt] (x1) at (3,-2.5) {$\oplus$};
-        \draw[-{Latex[length=3mm]}] (0.75,-2.0) |- (x1);
-        \draw[-{Latex[length=3mm]}] (5.25,-2.0) |- (x1);
-        
-        \node[draw, circle, inner sep=2pt] (x2) at (6.75,-2.5) {$\oplus$};
-        \draw[-{Latex[length=3mm]}] (x1) -- (x2);
-        \draw[-{Latex[length=3mm]}] (6.75,-2.0) -- (x2);
-        
-        % Feedback loop
-        \draw[-] (x2) -- (8.5,-2.5) -- (8.5,2) -- (-1,2);
-        \draw[-{Latex[length=3mm]}] (-1,2) |- (-1,0.5) -- (0,0.5);
-        
+        % Connection: cL to the chain
+        \draw[-] (cL) -- (cL |- x1);
+        \draw[-{Latex[length=2mm]}] (cL |- x1) -- (xL-1);
+
+        % Connections: XOR Chain (Right to Left)
+        \draw[-{Latex[length=2mm]}] (xL-1) -- ++(-1.4,0); % Pointer into the dots
+        \draw[-{Latex[length=2mm]}] (x2) -- (x1);
+
+        % Feedback Loop
+        \draw[-] (x1) -- ++(-0.8,0) |- (sL-1.west);
+
         % Output
-        \draw[-{Latex[length=3mm]}] (7.5,0.5) -- (9.5,0.5) node[right, align=left] {Sortie \\ $z_t$};
+        \draw[-{Latex[length=2mm]}] (s0) -- ++(1.0,0) node[right] {$z_t$};
+
     \end{tikzpicture}
     }
     \end{center}
@@ -435,7 +462,7 @@
         \node[draw, rounded corners, fill=green!20, text width=3.5cm, align=center, right=of attack1] (remove1) {3. Soustraction de\\ l'influence $L_1$};
         \node[draw, rounded corners, fill=yellow!20, text width=3.5cm, align=center, right=of remove1] (attack2) {4. Attaque sur $L_2$\\ (Biais $\epsilon_2$)};
         
-        \node[draw, rounded corners, fill=blue!10, text width=4.5cm, align=center, below=1.5cm of attack2] (finish) {5. État Initial Reconstruit\\ en cascade (\textbf{Cleartext})};
+        \node[draw, rounded corners, fill=blue!10, text width=4.5cm, align=center, below=1.5cm of attack2] (finish) {5. État Initial Reconstruit\\ en cascade (\textbf{Plaintext})};
 
         % Arrows
         \draw[-{Latex[length=3mm]}] (capture) -- (attack1);
