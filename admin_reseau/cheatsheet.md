@@ -65,3 +65,27 @@ Allow ip forwarding with
 ## Exit cleanly
     poweroff
 
+# IPV6
+
+## Config
+### ifconfig
+```bash
+ifconfig eth0 inet6 add 2001:db8:0:f101::6/64
+ifconfig eth0 up
+```
+### ip
+```bash
+ip -6 addr add 2001:db8:0:f101::6/64 dev eth0
+ip link set eth0 up
+```
+### /etc/network/interfaces
+```bash
+auto eth0
+iface eth0 inet6 static
+    address 2001:db8:0:f101::6/64
+    # ou :
+    # address 2001:db8:0:f101::6
+    # netmask 64
+```
+
+

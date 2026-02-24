@@ -1,0 +1,185 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Thème Madrid
+\usetheme{Madrid}           
+\usecolortheme{beaver}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz} % Indispensable pour le positionnement du logo
+
+% --- CONFIGURATION DU LOGO (BAS À DROITE) ---
+% On utilise le template 'footline' pour placer le logo à la fin de la construction de la slide
+\addtobeamertemplate{footline}{}{%
+    \begin{tikzpicture}[remember picture,overlay]
+        % anchor=south east : on ancre le coin bas-droit du logo
+        % at (current page.south east) : on le place au coin bas-droit de la page
+        % yshift=0.6cm : on le remonte un peu pour ne pas écraser le numéro de page
+        % xshift=-0.2cm : petite marge à droite
+        \node[anchor=south east, yshift=0.6cm, xshift=-0.2cm] at (current page.south east) {
+            \includegraphics[height=0.8cm]{logo_univ_bdx.png}
+        };
+    \end{tikzpicture}
+}
+% -----------------------------
+
+% Configuration pour le code Python (couleurs)
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Infos de la présentation
+\title{Operation Rubicon}
+\subtitle{Anatomie de la vulnérabilité Minerva}
+\date{\today}
+\author{Arnaud Gomes}
+\institute{Université de Bordeaux} 
+% Optionnel : Logo en grand sur la slide de titre aussi
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo_univ_bdx.png}}
+
+\begin{document}
+
+\maketitle
+
+% SLIDE 1: INTRO
+\begin{frame}{Le Pitch}
+    \begin{alertblock}{La plus grande Supply Chain Attack du 20e siècle}
+        Pendant 50 ans, la \textbf{CIA} et le \textbf{BND} ont vendu des machines de chiffrement truquées à plus de 100 pays.
+    \end{alertblock}
+    
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item \textbf{La Cible :} Crypto AG (Suisse).
+        \item \textbf{L'Arme :} Pas de micro, pas de bug logiciel... mais des \textbf{Mathématiques}.
+        \item \textbf{Le Vecteur :} Hardware "Trusted" (Séries HC-500).
+    \end{itemize}
+\end{frame}
+
+% SLIDE 2: L'ILLUSION
+\begin{frame}{L'Architecture (Le Leurre)}
+    \textbf{Le système : Chiffrement par flot (Stream Cipher)}
+    
+    $$ c_t = m_t \oplus z_t $$
+    
+    Génération de la suite chiffrante via \textbf{LFSR} (Linear Feedback Shift Registers) :
+    
+    \begin{itemize}
+        \item Polynôme de rétroaction sur $\mathbb{F}_2[X]$ :
+        $$ f(X) = 1 \oplus c_1 X \oplus \dots \oplus c_l X^l $$
+        \item \textbf{Argument commercial :} Utilisation de polynômes primitifs.
+        \item \textbf{Résultat :} Période maximale $T = 2^l - 1$ (m-suite) et équilibre statistique parfait.
+    \end{itemize}
+    
+    \begin{center}
+        \textit{"Indistinguable du bruit aléatoire pour les tests statistiques."}
+    \end{center}
+\end{frame}
+
+% SLIDE 3: LA BACKDOOR
+\begin{frame}{L'Exploit : Minerva}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Le problème du LFSR pur :}
+        Vulnérable à une attaque algébrique en $\mathcal{O}(l^3)$ via Berlekamp-Massey.
+        
+        \vspace{0.5cm}
+        \textbf{La solution (et la faille) :}
+        Combinaison non-linéaire filtrée.
+        
+        $$ z_t = g(S^{(t)}) $$
+        
+        \column{0.5\textwidth}
+        \begin{alertblock}{La Backdoor Statistique}
+            La fonction $g$ est truquée pour introduire une \textbf{corrélation} vers un registre cible $L_1$.
+            
+            $$ P(z_t = L_{1,t}) = 0.5 + \epsilon $$
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% SLIDE 4: DIVIDE AND CONQUER
+\begin{frame}{L'Attaque : Divide \& Conquer}
+    L'espace de recherche s'effondre.
+    
+    \begin{itemize}
+        \item \textbf{Complexité théorique (Force Brute) :}
+        $$ \mathcal{O}(2^{L_1 + L_2 + \dots + L_k}) \approx \infty $$
+        
+        \item \textbf{Complexité réelle (Minerva) :}
+        $$ \mathcal{O}(2^{L_1} + 2^{L_2} + \dots + 2^{L_k}) \approx \text{Quelques secondes} $$
+    \end{itemize}
+    
+    \vspace{0.5cm}
+    \textbf{Méthode :}
+    \begin{enumerate}
+        \item Isoler $L_1$ grâce au biais $\epsilon$.
+        \item Reconstruire $L_1$.
+        \item Soustraire le flux de $L_1$ et attaquer $L_2$.
+    \end{enumerate}
+\end{frame}
+
+% SLIDE 5: DEMO CODE
+\begin{frame}[fragile]{Preuve de Concept (Python)}
+    Simulation du biais de corrélation introduit dans la fonction de combinaison :
+    
+\begin{lstlisting}[language=Python]
+def compromised_combiner(l1, l2, l3):
+    # Backdoor: Si l2 & l3 sont nuls, on inverse. 
+    # Sinon, on sort l1 tel quel.
+    # Resultat : l1 fuite a 75% (Bias epsilon = 0.25)
+    
+    bias_condition = (l2 | l3)
+    if bias_condition == 0:
+        return 1 ^ l1
+    return l1
+\end{lstlisting}
+    
+    \small{Avec $\epsilon = 0.25$, quelques centaines de bits de chiffré suffisent pour converger.}
+\end{frame}
+
+% SLIDE 6: CONCLUSION
+\begin{frame}{Conclusion}
+    \begin{center}
+        \Large \textbf{Hardware is hard... but Math is harder.}
+    \end{center}
+    
+    \vspace{1cm}
+    
+    \begin{itemize}
+        \item La sécurité par l'obscurité est une dette technique.
+        \item Le matériel fonctionnait "correctement", c'est la spécification qui était hostile.
+        \item \textbf{Takeaway :} Vérifiez vos primitives cryptographiques (Kerckhoffs's principle).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+    Questions ?
+\end{frame}
+
+\end{document}

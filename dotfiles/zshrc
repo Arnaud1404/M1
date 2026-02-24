@@ -138,7 +138,8 @@ alias lt='eza -a --tree --level=2 --icons --git-ignore'
 alias server='hostname -I | awk "{print \"Server starting at: http://\" \$1 \":8000\"}"; python3 -m http.server 8000'
 alias updatefox='curl -o /home/arno/.config/mozilla/firefox/n50ymb4j.default-release/user.js \
 https://raw.githubusercontent.com/yokoffing/BetterFox/main/user.js'
-
+alias boost-off='echo 0 | sudo tee /sys/devices/system/cpu/cpufreq/boost'
+alias boost-on='echo 1 | sudo tee /sys/devices/system/cpu/cpufreq/boost'
 # Load correct p10k config
 if [[ -n "$TERMUX_VERSION" ]] || [[ "$LC_MOBILE_SESSION" == "true" ]]; then
     [[ ! -f ~/.p10k.mobile.zsh ]] || source ~/.p10k.mobile.zsh
