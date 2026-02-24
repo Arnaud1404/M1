@@ -2,8 +2,21 @@
 
 % --- THEME SETUP ---
 \usetheme{Madrid}
-\usecolortheme{beaver} % Red/Grey theme for "Top Secret" vibe
+% \usecolortheme{beaver} % Red/Grey theme for "Top Secret" vibe
 \setbeamertemplate{navigation symbols}{} % Hide navigation commands (icons)
+
+% --- CUSTOM WHITE BANNER LOGO SETUP ---
+\setbeamercolor{frametitle}{bg=white, fg=blue!70!black}
+\setbeamertemplate{frametitle}{%
+    \vspace{0.2cm}
+    \begin{beamercolorbox}[wd=\paperwidth, ht=0.7cm, dp=0.2cm]{frametitle}
+        \hspace*{0.5cm}\usebeamerfont{frametitle}\insertframetitle\hfill
+        \raisebox{-0.3cm}{\includegraphics[height=1cm]{logo_univ_bdx.png}}\hspace*{0.5cm}
+    \end{beamercolorbox}%
+    \begin{tikzpicture}[remember picture,overlay]
+        \draw[blue!70!black, thick] (current page.north west) ++(0,-1.3cm) -- ++(\paperwidth,0);
+    \end{tikzpicture}
+}
 
 % --- PACKAGES ---
 \usepackage[utf8]{inputenc}     
@@ -19,19 +32,12 @@
 \setbeameroption{show notes on second screen=right}
 \setbeamertemplate{note page}[plain]
 
-% --- LOGO CONFIG (TOP RIGHT) ---
-\addtobeamertemplate{footline}{}{%
-    \begin{tikzpicture}[remember picture,overlay]
-        \node[anchor=north east, yshift=-0.1cm, xshift=-0.2cm] at (current page.north east) {
-            \includegraphics[height=0.8cm]{logo_univ_bdx.png}
-        };
-    \end{tikzpicture}
-}
+% --- LOGO CONFIG (MOVED TO FRAMETITLE) ---
 
 % --- METADATA ---
 \title{Operation Rubicon}
 \subtitle{Analyse Cryptographique de la Vulnérabilité Minerva}
-\author{Rump Session}
+\author{Arnaud Gomes}
 \institute{Université de Bordeaux}
 \date{\today}
 
@@ -175,7 +181,7 @@
 % 2.5 HISTORICAL IMPACT SLIDES
 % ==============================================================================
 
-\begin{frame}{L'Impact Historique : Comment les failles étaient-elles exploitées ?}
+\begin{frame}{L'Impact Historique : Exploitation des failles}
     \textbf{Cas n°1 : La Guerre des Malouines (1982)}
 
     \vspace{0.3cm}
