@@ -21,6 +21,7 @@
 % --- PACKAGES ---
 \usepackage[utf8]{inputenc}     
 \usepackage[T1]{fontenc}
+\usepackage[french]{babel}
 \usepackage{booktabs}
 \usepackage{amsmath, amssymb}
 \usepackage{tikz}
@@ -36,7 +37,7 @@
 
 % --- METADATA ---
 \title{Operation Rubicon}
-\subtitle{Analyse Cryptographique de la Vulnérabilité Minerva}
+\subtitle{Analyse Cryptographique des Machines Crypto AG (Op. RUBICON / MINERVA)}
 \author{Arnaud Gomes}
 \institute{Université de Bordeaux}
 \date{\today}
@@ -53,7 +54,7 @@
         
         Pendant près de 50 ans, les agences de renseignement américaine (CIA) et ouest-allemande (BND) ont secrètement possédé la société suisse Crypto AG, qui était alors le leader mondial incontesté de la vente d'équipements de chiffrement et de sécurité des télécommunications pour les diplomates et tous les gouvernements.
         
-        L'histoire que je vais vous raconter aujourd'hui montre que la vulnérabilité technique au sein de ces machines n'était pas une simple erreur de code. C'était une véritable porte dérobée (backdoor) mathématique, créée dès le départ pour écouter les communications du monde entier.
+        L'histoire que je vais vous raconter aujourd'hui montre que la vulnérabilité technique au sein de ces machines n'était pas une simple erreur de code. Il s'agissait d'une porte dérobée (backdoor) mathématique implantée au niveau matériel, conçue pour affaiblir l'espace des clés de multiples gouvernements.
     }
 \end{frame}
 
@@ -157,7 +158,7 @@
         \textbf{Version B : "Le Reste du Monde"}
         \begin{itemize}
             \item Iran, Libye, Argentine, Inde, Vatican...
-            \item Machines comportant la faille \textit{Minerva}.
+            \item Machines comportant la backdoor implantée par la NSA.
             \item Messages lisibles en temps réel par NSA/BND.
         \end{itemize}
     \end{columns}
@@ -170,8 +171,8 @@
     \note{
         Ce que les pays clients ignoraient évidemment, c'est que l'usine de Zoug produisait deux versions de la même machine en modifiant juste l'algorithme interne.
         
-        La Version A, sécurisée organiquement, était vendue aux pays alliés de l'OTAN, comme le Royaume-Uni ou les Etats-Unis.
-        La Version B était destinée au reste du monde : l'Iran, la Libye de Kadhafi, l'Argentine de la junte militaire, l'Inde... Ces machines contenaient la faille Minerva, permettant aux espions de lire les câbles diplomatiques en clair ou presque.
+        La Version A, sécurisée cryptographiquement, était vendue aux pays alliés de l'OTAN, comme le Royaume-Uni ou les États-Unis.
+        La Version B était destinée au reste du monde~: l'Iran, la Libye de Kadhafi, l'Argentine de la junte militaire, l'Inde... La société Crypto AG, désignée par le nom de code MINERVA au sein de la CIA, y implantait une backdoor permettant aux agences de lire les câbles diplomatiques en clair ou presque.
         
         J'ai trouvé fascinant de voir que le degré de secret était tel que même les ingénieurs concepteurs de chez Crypto AG ignoraient qu'ils vendaient des boîtes truquées. Seule une micro-cellule d'ingénieurs mathématiciens concevait la faille pour la NSA !
     }
@@ -186,25 +187,25 @@
 
     \vspace{0.3cm}
     \begin{itemize}
-        \item \textbf{Le Contexte :} Conflit armé entre le Royaume-Uni (Fournisseur "Version A") et l'Argentine (Client Crypto AG "Version B").
+        \item \textbf{Le Contexte :} Conflit armé entre le Royaume-Uni et l'Argentine (cliente de Crypto AG, ``Version B'').
         \item \textbf{L'Exploitation :} La junte militaire argentine chiffrait l'intégralité de ses communications navales tactiques avec des machines de la série Hagelin CX-52 / HC-500.
-        \item \textbf{Résultat Opérationnel :} La NSA déchiffre les positions navales argentines en temps réel et transmet l'ordre de bataille exact à Londres.
+        \item \textbf{Résultat Opérationnel :} La NSA déchiffre les positions navales argentines en temps réel et transmet les renseignements à Londres via les accords Five Eyes.
     \end{itemize}
 
     \vspace{0.5cm}
     \begin{columns}
         \column{0.8\textwidth}
-        \begin{alertblock}{La trahison diplomatique parfaite}
-            L'Argentine, pensant son canal diplomatique sécurisé, négociait publiquement aux Nations-Unies tout en planifiant des frappes. Margaret Thatcher lisait les télégrammes avant même le président argentin.
+        \begin{alertblock}{Asymétrie du Renseignement}
+            L'Argentine, pensant son canal diplomatique sécurisé, négociait publiquement aux Nations-Unies tout en planifiant des frappes. Le Royaume-Uni, bénéficiaire des interceptions NSA/BND, disposait d'un avantage informationnel décisif.
         \end{alertblock}
     \end{columns}
 
     \note{
         Pour bien comprendre comment ce niveau d'espionnage mathématique se traduit sur le terrain, je propose deux exemples historiques majeurs. D'abord, la Guerre des Malouines en 1982.
         
-        Lorsque l'Argentine envahit les îles, elle était totalement confiante dans ses communications chiffrées par ses machines Hagelin qu'elle jugeait ultra-modernes. L'erreur fut fatale. Le Royaume-Uni, pays ami des États-Unis et faisant partie de l'OTAN (donc utilisateur de la machine pure Version A), bénéficiait des écoutes totales.
+        Lorsque l'Argentine envahit les îles, elle était totalement confiante dans ses communications chiffrées par ses machines Hagelin qu'elle jugeait ultra-modernes. Cette confiance aveugle a entraîné une compromission totale de leurs canaux de communication tactiques et stratégiques. Le Royaume-Uni, en tant que membre de l'alliance Five Eyes, était bénéficiaire direct des interceptions NSA/BND issues des machines compromises vendues par Crypto AG à l'Argentine.
         
-        Grâce à la faille Minerva, la NSA craquait en temps réel les communications navales et diplomatiques argentines. Elle transmettait la position des sous-marins et des frégates au commandement de Margaret Thatcher. Dans le monde des agences, on raconte que Londres lisait les plans de la junte militaire plus rapidement que les propres généraux argentins.
+        Grâce à la backdoor implantée dans les machines Crypto AG (nom de code MINERVA), la NSA déchiffrait en temps réel les communications navales et diplomatiques argentines et transmettait les renseignements au commandement britannique via les canaux de partage alliés.
     }
 \end{frame}
 
@@ -224,19 +225,19 @@
         \textbf{Attentat "La Belle" Berlin (1986)}
         \begin{itemize}
             \item Ronald Reagan accuse Mouammar Kadhafi de l'attentat de Berlin-Ouest.
-            \item Preuve formelle : Les télégrammes de "félicitations" libyens chiffrés par Crypto AG explosent silencieusement dans les serveurs de la NSA.
+            \item Preuve formelle~: les télégrammes de ``félicitations'' libyens chiffrés par Crypto AG ont été déchiffrés quasi-instantanément par l'infrastructure de la NSA, fournissant un accès direct au texte clair.
         \end{itemize}
     \end{columns}
 
     \vspace{0.6cm}
-    \textit{Conséquence globale : Durant toute la Guerre Froide, la CIA a écouté plus de 120 pays sans la moindre résistance topologique.}
+    \textit{Conséquence globale~: durant toute la Guerre Froide, la CIA a intercepté les communications de plus de 120~pays de manière systématique.}
 
     \note{
         Je voudrais également aborder le Moyen-Orient. Lors de la Révolution Iranienne de 1979 et de la crise des otages, le régime islamiste utilise massivement les HC-500 "Version B" léguées par le Shah d'Iran. Le président américain Jimmy Carter déchiffre jour par jour les discussions internes du gouvernement de l'Ayatollah Khomeini... alors même que ceux-ci négocient contre lui !
         
-        Plus tard, en 1986, lors de la bombe posée dans la discothèque berlinoise "La Belle", le président Ronald Reagan ordonne le bombardement de la Libye. Pour justifier cette frappe, l'administration américaine évoque des "preuves absolues". Ces preuves irréfutables s'avèrent être les câbles libyens chiffrés (des "Félicitations pour Berlin" envoyées de Tripoli) déchiffrés en quelques secondes par la NSA grâce, une fois de plus, à la faille intentionnelle de leurs machines suisses.
+        Plus tard, en 1986, lors de la bombe posée dans la discothèque berlinoise ``La Belle'', le président Ronald Reagan ordonne le bombardement de la Libye. Pour justifier cette frappe, l'administration américaine évoque des ``preuves absolues''. Ces preuves irréfutables s'avèrent être les câbles libyens chiffrés (des ``Félicitations pour Berlin'' envoyées de Tripoli) déchiffrés quasi-instantanément par l'infrastructure de la NSA, grâce à la backdoor intentionnelle implantée dans leurs machines Crypto AG.
         
-        Pendant un demi-siècle, ce fut tout l'échiquier mondial de la Guerre Froide qui tombait, de manière transparente.
+        Une proportion massive du trafic diplomatique du bloc non-aligné a ainsi été systématiquement interceptée et analysée.
     }
 \end{frame}
 
@@ -246,7 +247,7 @@
 \section{Architecture Technique}
 
 \begin{frame}{Architecture : Chiffrement par flot}
-    \textbf{Modèle (Cours Chap. II -- Def. II-1)}
+    \textbf{Modèle (Cours Chap. II, Sect. 3)}
 
     \vspace{0.3cm}
     Les machines Crypto AG utilisent un \textbf{chiffrement par flot synchrone}.
@@ -265,7 +266,7 @@
     \end{itemize}
 
     \note{
-        - Def. II-1 : chiffrement par flot synchrone.
+        - Cours Chap.~II, Sect.~3~: chiffrement par flot synchrone.
         - XOR bit à bit $\Rightarrow$ trivial en silicium.
         - Ligne télex : 1 bit corrompu $=$ 1 bit perdu (pas de propagation).
         - Sécurité $\equiv$ qualité de la suite chiffrante $z_t$.
@@ -361,7 +362,7 @@
     \textit{Pour vendre une machine ``inviolable'', Crypto AG devait briser cette transparence algébrique.}
 
     \note{
-        - Berlekamp-Massey : Thm. II-8.
+        - Berlekamp-Massey~: Définition~II-8 et Proposition~II-9 (Algorithme de Berlekamp-Massey).
         - $2\ell$ bits de suite chiffrante $\Rightarrow$ reconstruction complète de $f(X)$ et $S^{(0)}$.
         - LFSR brut $=$ sécurité nulle face à un adversaire compétent.
         - $\Rightarrow$ Nécessité d'introduire de la non-linéarité.
@@ -415,14 +416,14 @@
     \end{tikzpicture}
 
     \note{
-        - Réalité industrielle : k entre 3 et 6 LFSRs (ASIC compacts).
-        - \textbf{Pourquoi des longueurs différentes ?} Si $\ell_i$ premières entre elles, la période globale est le produit des périodes individuelles (gigantesque pour un coût minime).
-        - \textbf{Compromis de Siegenthaler} : Degré algébrique vs Immunité de corrélation.
-        - \textbf{Le Leurre} : La NSA a maximisé le degré algébrique de $g$ pour rassurer les ingénieurs.
+        - Réalité industrielle~: k entre 3 et 6 LFSRs (ASIC compacts).
+        - \textbf{Pourquoi des longueurs différentes~?} Si $\ell_i$ premières entre elles, la période globale est le produit des périodes individuelles (gigantesque pour un coût minime).
+        - [Transition verbale] «~Il y a un résultat fondamental du cours qui s'applique ici~: le Compromis de Siegenthaler. Pour une fonction booléenne équilibrée à $n$ entrées, on a la borne $m + d \le n - 1$, où $m$ est l'ordre d'immunité de corrélation et $d$ le degré algébrique. En d'autres termes, on ne peut pas maximiser les deux simultanément.~»
+        - «~Et c'est exactement ce que la NSA a exploité~: elle a maximisé le degré algébrique $d$ de la fonction de combinaison $g$, de sorte que les tests standard de complexité linéaire (Berlekamp-Massey) restaient incalculables. Cela rassurait les ingénieurs de Crypto AG. Mais en contrepartie, la borne de Siegenthaler impose que $m$ ---~l'immunité de corrélation~--- chute. Et c'est précisément cette faiblesse en corrélation qui ouvre la porte à l'attaque par Divide \& Conquer que nous verrons ensuite.~»
     }
 \end{frame}
 
-\begin{frame}{Minerva : La Backdoor Statistique}
+\begin{frame}{La Backdoor Statistique de Crypto AG}
     La NSA conçoit en secret une fonction $g$ \textbf{biaisée} gravée en silicium.
     Le combineur échoue sciemment à satisfaire le critère d'\textbf{immunité de corrélation}.
 
@@ -443,7 +444,7 @@
     \end{tikzpicture}
 
     \note{
-        - Minerva = violation délibérée de l'immunité de corrélation.
+        - La backdoor Crypto AG = violation délibérée de l'immunité de corrélation.
         - \textbf{Astuce NSA} : degré algébrique de $g$ gardé élevé $\Rightarrow$ Berlekamp-Massey reste incalculable $\Rightarrow$ rassure les ingénieurs de Crypto AG.
         - Mais immunité de corrélation sacrifiée $\Rightarrow$ attaque par corrélation possible.
         - Compromis de Siegenthaler exploité à l'envers : la faiblesse est cachée derrière la complexité apparente.
@@ -473,7 +474,7 @@
 
         \column{0.5\textwidth}
         \begin{center}
-            \textbf{Corrélation (Minerva)}\\
+            \textbf{Corrélation (Backdoor)}\\
             \vspace{0.2cm}
             \textcolor{green!60!black}{\Large $\mathcal{O}(\sum_{i=1}^k 2^{\ell_i})$}\\
             \vspace{0.2cm}
@@ -566,22 +567,23 @@
         \column{0.6\textwidth}
         \textbf{L'Arrestation en Iran}
         \begin{itemize}
-            \item Hans Bühler, ingénieur commercial star de Crypto AG, est brusquement arrêté à Téhéran en 1992.
-            \item Le gouvernement Iranien suspecte l'équipement d'être compromis suite à des fuites liées à des assassinats politiques.
+            \item Hans Bühler, ingénieur commercial star de Crypto AG, est arrêté à Téhéran en \textbf{mars 1992}.
+            \item Interrogé pendant \textbf{9~mois} par les services iraniens, libéré en \textbf{janvier 1993}.
+            \item Le gouvernement iranien suspecte l'équipement d'être compromis suite à des fuites liées à des assassinats politiques.
         \end{itemize}
 
         \vspace{0.3cm}
         \textbf{L'Opération Démasquée}
         \begin{itemize}
-            \item La CIA et le BND refusent d'intervenir pour protéger la couverture.
-            \item Crypto AG finit par payer une étrange rançon/caution de 1\text{M} \$ à l'Iran, puis licencie Bühler.
-            \item L'attention médiatique fait s'écrouler le mythe inviolable de la "neutralité suisse".
+            \item Le \textbf{BND} paie la rançon/caution de \textbf{1\,M\,\$} à l'Iran~; la \textbf{CIA refuse} de contribuer.
+            \item Ce différend financier provoque le \textit{Divorce Agreement} de 1993~: la CIA rachète la part du BND pour \textbf{17\,M\,\$}.
+            \item Crypto AG licencie Bühler~; l'attention médiatique fait s'écrouler le mythe de la ``neutralité suisse''.
         \end{itemize}
 
         \column{0.4\textwidth}
         \begin{center}
             \begin{alertblock}{La Couverture Parfaite}
-                Bühler, comme l'immense majorité des ingénieurs suisses de Crypto AG, ignorait totalement la manipulation des schémas d'immunité des LFSR par Minerva !
+                Bühler, comme l'immense majorité des ingénieurs suisses de Crypto AG, ignorait totalement la manipulation des schémas d'immunité des LFSR par la CIA/NSA~!
             \end{alertblock}
         \end{center}
     \end{columns}
@@ -589,9 +591,11 @@
     \note{
         Mais alors, si le système était mathématiquement pur en surface, comment l'empire secret Rubicon s'est-il finalement effondré ?
 
-        Ironiquement pour nous analystes d'algorithmes, ce n'est pas un audit cryptographique qui a révélé la faille, mais une grossière erreur humaine ! En 1992, Hans Bühler, un des vendeurs phares de Crypto AG qui vendait ces machines au Moyen-Orient, est brusquement emprisonné par l'Iran. Les iraniens s'étaient rendus compte que l'Ouest anticipait de manière trop miraculeuse leurs frappes terroristes et politiques, et ont logiquement pointé du doigt l'intégrité de ces machines suisses qu'on leur avait lourdement facturées.
+        Ironiquement pour nous analystes d'algorithmes, ce n'est pas un audit cryptographique qui a révélé la faille, mais une grossière erreur humaine~! En mars 1992, Hans Bühler, un des vendeurs phares de Crypto AG qui vendait ces machines au Moyen-Orient, est arrêté par les services iraniens. Les Iraniens s'étaient rendus compte que l'Ouest anticipait de manière trop miraculeuse leurs frappes terroristes et politiques, et ont logiquement pointé du doigt l'intégrité de ces machines suisses.
 
-        Bühler, qui n'était pas au courant de la fraude, reste emprisonné neuf mois. La CIA a catégoriquement refusé de lever le petit doigt pour ne pas "griller" la couverture technologique. Dès sa libération sous caution, ce traitement injuste le poussera à alerter la presse germanique. De fil en aiguille, les journalistes d'investigation trouveront la relation cachée entre l'usine de Zoug et le BND à Munich. Le secret industriel du siècle venait de s'éteindre.
+        Bühler, qui n'était pas au courant de la fraude, reste interrogé pendant neuf mois, jusqu'en janvier 1993. C'est le BND qui paie la rançon d'un million de dollars pour sa libération~; la CIA refuse catégoriquement de contribuer, de peur de ``griller'' la couverture technologique. Ce différend financier entre les deux agences provoque le \textit{Divorce Agreement} de 1993~: la CIA rachète la part allemande pour 17~millions de dollars et prend le contrôle exclusif de Crypto AG.
+
+        Dès sa libération, ce traitement injuste poussera Bühler à alerter la presse germanique. De fil en aiguille, les journalistes d'investigation trouveront la relation cachée entre l'usine de Zoug et le BND à Munich.
     }
 \end{frame}
 
@@ -623,7 +627,7 @@
 
         En Février 2020 (il y a à peine quelques années), une enquête coup de poing mondiale entre le Washington Post, la télévision allemande et la télévision suisse ont publié ce qu'ils appellent les "Cryptoleaks". Des documents top-secrets de la CIA ont été déclassifiés, et ont formellement prouvé que de 1970 jusqu'à la fin de la guerre froide, ce duo contrôlait plus de 40\% des flux mondiaux cryptés.
 
-        Un rapport interne de l'agence va même jusqu'à qualifier Rubicon de "coup de maître du renseignement du siècle". La société Crypto AG a finalement été liquidée en 2018. Des décennies de communications ultra-secrètes ont été aspirées silencieusement, le tout à cause d'un décalage mathématique subtil sur un polynome de LFSR.
+        Un rapport interne de l'agence va même jusqu'à qualifier Rubicon de "coup de maître du renseignement du siècle". La société Crypto AG a finalement été liquidée en 2018. Des décennies de communications ultra-secrètes ont été aspirées silencieusement, le tout à cause d'un décalage mathématique subtil sur un polynôme de LFSR.
     }
 \end{frame}
 
@@ -637,7 +641,7 @@
         \item \textbf{Support de Cours :}
         \begin{itemize}
             \item G. Castagnos, \textit{Cours de Cryptologie 2025-2026}, Univ. Bordeaux.
-            \item Chap. II : Chiffrements par flot, LFSR, Berlekamp-Massey, immunité de corrélation.
+            \item Chap. II, Sect. 3 : Chiffrements par flot, LFSR (Def.~II-4, Prop.~II-5), Berlekamp-Massey (Def.~II-8 et Prop.~II-9), immunité de corrélation.
         \end{itemize}
 
         \vspace{0.3cm}
@@ -649,7 +653,7 @@
         \end{itemize}
     \end{itemize}
     \note{
-        - Fondements mathématiques : Chap. II (Castagnos), Def. II-4, Prop. II-5, Thm. II-8.
+        - Fondements mathématiques~: Chap.~II (Castagnos), Def.~II-4, Prop.~II-5, Def.~II-8 et Prop.~II-9.
         - Source primaire : documents CIA déclassifiés, publiés par le Washington Post.
         - Aspects techniques : reverse-engineering par le CCC (Leipzig 2020).
     }
