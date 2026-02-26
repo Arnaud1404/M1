@@ -410,6 +410,10 @@
         \end{column}
     \end{columns}
 
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[Modèle : Pornin, SSTIC]};
+    \end{tikzpicture}
+
     \note{
         - Réalité industrielle : k entre 3 et 6 LFSRs (ASIC compacts).
         - \textbf{Pourquoi des longueurs différentes ?} Si $\ell_i$ premières entre elles, la période globale est le produit des périodes individuelles (gigantesque pour un coût minime).
@@ -433,6 +437,10 @@
 
     \vspace{0.2cm}
     \textit{Ce biais est invisible à l'usage quotidien, mais statistiquement exploitable avec suffisamment de chiffré.}
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[Biais $\epsilon$ : CCC, Reverse-Engineering 2020]};
+    \end{tikzpicture}
 
     \note{
         - Minerva = violation délibérée de l'immunité de corrélation.
@@ -476,6 +484,10 @@
 
     \vspace{0.4cm}
     \textbf{Méthode :} Avec du \textit{clair probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ à la suite chiffrante captée. Le vrai état se démarque par corrélation.
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[KPA Methodology : Pornin, SSTIC]};
+    \end{tikzpicture}
 
     \note{
         - \textbf{Attaque à clair connu}.
@@ -532,6 +544,10 @@
 
     \vspace{0.3cm}
     \textbf{Complexité Totale :} $\mathcal{O}(\sum_{i=1}^{k} 2^{\ell_i}) \ll \mathcal{O}(2^{\sum_{i=1}^{k} \ell_i})$
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[Cascade Iteration : CCC, 2020]};
+    \end{tikzpicture}
 
     \note{
         - Attaque itérative : Brise l'exposant (somme des longueurs) en une somme linéaire.
