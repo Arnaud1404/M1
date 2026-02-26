@@ -250,7 +250,7 @@
 
     \vspace{0.3cm}
     Les machines Crypto AG utilisent un \textbf{chiffrement par flot synchrone}.
-    Le plaintext $m_t$ est chiffré bit à bit avec le keystream $z_t$ :
+    Le plaintext $m_t$ est chiffré bit à bit avec la suite chiffrante $z_t$ :
     
     \begin{block}{Équation Fondamentale}
     $$c_t = m_t \oplus z_t$$
@@ -268,13 +268,13 @@
         - Def. II-1 : chiffrement par flot synchrone.
         - XOR bit à bit $\Rightarrow$ trivial en silicium.
         - Ligne télex : 1 bit corrompu $=$ 1 bit perdu (pas de propagation).
-        - Sécurité $\equiv$ qualité du keystream $z_t$.
+        - Sécurité $\equiv$ qualité de la suite chiffrante $z_t$.
     }
 \end{frame}
 
 % --- SLIDE 1: RAW LFSR ---
 \begin{frame}{Le Générateur : LFSR}
-    Le keystream est produit par un \textbf{LFSR} (Linear Feedback Shift Register) : un automate linéaire sur $\mathbb{F}_2$.
+    La suite chiffrante est produite par un \textbf{LFSR} (Linear Feedback Shift Register) : un automate linéaire sur $\mathbb{F}_2$.
     
     \begin{center}
     \resizebox{0.52\linewidth}{!}{
@@ -354,7 +354,7 @@
     \begin{itemize}
         \item Reconstruit le polynôme minimal $f(X)$ d'une suite récurrente linéaire.
         \item Complexité : $\mathcal{O}(\ell^2)$ opérations sur $\mathbb{F}_2$.
-        \item Il suffit d'observer \textbf{$2\ell$ bits} consécutifs du keystream $z_t$ pour retrouver $S^{(0)}$ et prédire toute la suite.
+        \item Il suffit d'observer \textbf{$2\ell$ bits} consécutifs de la suite chiffrante $z_t$ pour retrouver $S^{(0)}$ et prédire toute la suite.
     \end{itemize}
 
     \vspace{0.2cm}
@@ -362,7 +362,7 @@
 
     \note{
         - Berlekamp-Massey : Thm. II-8.
-        - $2\ell$ bits de keystream $\Rightarrow$ reconstruction complète de $f(X)$ et $S^{(0)}$.
+        - $2\ell$ bits de suite chiffrante $\Rightarrow$ reconstruction complète de $f(X)$ et $S^{(0)}$.
         - LFSR brut $=$ sécurité nulle face à un adversaire compétent.
         - $\Rightarrow$ Nécessité d'introduire de la non-linéarité.
     }
@@ -410,7 +410,7 @@
         - Réf Cours : Extension du concept de "LFSR filtré" (p.9) à une architecture multi-registres.
         - Argumentaire : Indispensable pour modéliser l'attaque Divide \& Conquer sur Crypto AG.
         - Compromis de Siegenthaler : Ordre d'immunité de corrélation vs Degré algébrique.
-        - Sécurité : Repose sur l'impossibilité d'isoler un registre via le keystream.
+        - Sécurité : Repose sur l'impossibilité d'isoler un registre via la suite chiffrante.
     }
 \end{frame}
 
@@ -425,7 +425,7 @@
     \end{alertblock}
 
     \vspace{0.3cm}
-    \textbf{Conséquence :} Le keystream $z_t$ ``fuite'' de l'information sur la sortie $x_1^{(t)}$ d'un registre individuel.
+    \textbf{Conséquence :} La suite chiffrante $z_t$ ``fuite'' de l'information sur la sortie $x_1^{(t)}$ d'un registre individuel.
 
     \vspace{0.2cm}
     \textit{Ce biais est invisible à l'usage quotidien, mais statistiquement exploitable avec suffisamment de ciphertext.}
@@ -471,12 +471,12 @@
     \end{columns}
 
     \vspace{0.4cm}
-    \textbf{Méthode :} Avec du \textit{plaintext probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ au keystream capté. Le vrai état se démarque par corrélation.
+    \textbf{Méthode :} Avec du \textit{plaintext probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ à la suite chiffrante captée. Le vrai état se démarque par corrélation.
 
     \note{
         - \textbf{Known-Plaintext Attack} : attaque à texte clair connu.
         - Source du plaintext : en-têtes régulières des télex diplomatiques (``To Mr Ambassador...'').
-        - $m_t \oplus c_t = z_t$ $\Rightarrow$ keystream récupéré.
+        - $m_t \oplus c_t = z_t$ $\Rightarrow$ suite chiffrante récupérée.
         - Isoler $LFSR_1$ grâce au biais $\epsilon_1$, soustraire, puis attaquer $LFSR_2$, etc.
         - Exponentielle de la somme $\to$ somme d'exponentielles.
     }
@@ -513,7 +513,7 @@
     \begin{enumerate}
         \item Capter le chiffré cible, et y associer du ``Plaintext-Probable'' (en-tête télex, salutation diplomatique).
         \item Simuler $LFSR_1$ pour toutes ses clés partielles ($2^{\ell_1}$ états).
-        \item Conserver la clé de $LFSR_1$ qui maximise la corrélation avec le keystream.
+        \item Conserver la clé de $LFSR_1$ qui maximise la corrélation avec la suite chiffrante.
         \item Soustraire l'influence de $LFSR_1$ et continuer sur les registres suivants.
     \end{enumerate}
 
