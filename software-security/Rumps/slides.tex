@@ -245,163 +245,196 @@
 % ==============================================================================
 \section{Architecture Technique}
 
-\begin{frame}{Architecture : Chiffrement par Flot}
-    \textbf{Modèle Mathématique (Cours Chap. II)}
+\begin{frame}{Architecture : Chiffrement par flot}
+    \textbf{Modèle (Cours Chap. II -- Def. II-1)}
 
     \vspace{0.3cm}
-    Le système est un \textbf{chiffrement par flot synchrone}.
-    Le message clair $m_t$ est chiffré bit à bit avec un flux pseudo-aléatoire $z_t$ (keystream) :
+    Les machines Crypto AG utilisent un \textbf{chiffrement par flot synchrone}.
+    Le plaintext $m_t$ est chiffré bit à bit avec le keystream $z_t$ :
     
     \begin{block}{Équation Fondamentale}
     $$c_t = m_t \oplus z_t$$
     \end{block}
 
     \vspace{0.3cm}
-    \textbf{Avantages dans le Contexte Matériel ($1970-1980$)} :
+    \textbf{Pourquoi en hardware (1970--1990) ?}
     \begin{itemize}
-        \item Implémentation hardware très économique en portes logiques.
-        \item Le déchiffrement est identique au chiffrement ($m_t = c_t \oplus z_t$).
-        \item Pas de propagation d'erreur sur la ligne radio/télex.
+        \item Implémentation en portes logiques extrêmement compacte.
+        \item Symétrie : déchiffrement identique ($m_t = c_t \oplus z_t$).
+        \item Pas de propagation d'erreur sur ligne radio/télex.
     \end{itemize}
 
     \note{
-        Je vais maintenant plonger sous le capot technique pour analyser mathématiquement comment la faille a été introduite, en m'appuyant rigoureusement sur le modèle du chapitre II du cours de cryptologie.
-        
-        Les machines de Crypto AG utilisaient un modèle de "chiffrement par flot synchrone". C'est un principe très calculatoire : le texte clair $m_t$ est chiffré bit par bit par une simple opération d'Ou-Exclusif (XOR) avec un bit de la suite chiffrante $z_t$. 
-        
-        Pourquoi ont-ils choisi cela dans les années 70-80 ? Pour l'implémentation physique en silicium, que je vais vous montrer. Implémenter un chiffrement par flot en hardware coûte infiniment moins cher en espace et en énergie. De plus, sur des lignes télex imparfaites, la corruption d'un bit de cryptogramme en cas de coupure radio ne corrompt qu'un seul bit de texte décrypté : c'est très résilient !
+        - Def. II-1 : chiffrement par flot synchrone.
+        - XOR bit à bit $\Rightarrow$ trivial en silicium.
+        - Ligne télex : 1 bit corrompu $=$ 1 bit perdu (pas de propagation).
+        - Sécurité $\equiv$ qualité du keystream $z_t$.
     }
 \end{frame}
 
-\begin{frame}{Le Générateur : Registres à Décalage (LFSR)}
-    La sécurité repose sur la suite chiffrante, générée généralement par un ou plusieurs \textbf{LFSR (Linear Feedback Shift Register)}.
-
-    \vspace{0.3cm}
+% --- SLIDE 1: RAW LFSR ---
+\begin{frame}{Le Générateur : LFSR}
+    Le keystream est produit par un \textbf{LFSR} (Linear Feedback Shift Register) : un automate linéaire sur $\mathbb{F}_2$.
+    
     \begin{center}
-    \resizebox{0.8\linewidth}{!}{
-    \begin{tikzpicture}[thick, node distance=0.8cm]
-        % Styles for uniform circles - Final Tightening
+    \resizebox{0.52\linewidth}{!}{
+    \begin{tikzpicture}[thick, scale=0.85, every node/.style={transform shape}]
         \tikzset{
-            multiplier/.style={draw, circle, inner sep=0pt, minimum size=0.55cm, font=\small},
-            xor/.style={draw, circle, inner sep=0pt, minimum size=0.4cm}
+            regcell/.style={draw, minimum width=1.2cm, minimum height=0.55cm},
+            dotcell/.style={draw, minimum width=0.55cm, minimum height=0.55cm},
+            multiplier/.style={draw, circle, inner sep=0pt, minimum size=0.4cm, font=\scriptsize},
+            xor/.style={draw, circle, inner sep=0pt, minimum size=0.32cm, font=\scriptsize}
         }
 
-        % Register Cells - Slightly shorter
-        \node[draw, minimum width=1.4cm, minimum height=0.7cm] (sL-1) at (0,0) {$S_{\ell-1}^{(t)}$};
-        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of sL-1] (sL-2) {$S_{\ell-2}^{(t)}$};
-        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of sL-2] (dots1) {$\dots$};
-        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of dots1] (dots2) {$\dots$};
-        \node[draw, minimum width=0.7cm, minimum height=0.7cm, right=0pt of dots2] (dots3) {$\dots$};
-        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of dots3] (s1) {$S_{1}^{(t)}$};
-        \node[draw, minimum width=1.4cm, minimum height=0.7cm, right=0pt of s1] (s0) {$S_{0}^{(t)}$};
+        % Register Cells
+        \node[regcell] (sL-1) at (0,0) {\scriptsize $S_{\ell-1}^{(t)}$};
+        \node[regcell, right=0pt of sL-1] (sL-2) {\scriptsize $S_{\ell-2}^{(t)}$};
+        \node[dotcell, right=0pt of sL-2] (dots1) {\scriptsize $\dots$};
+        \node[dotcell, right=0pt of dots1] (dots2) {\scriptsize $\dots$};
+        \node[dotcell, right=0pt of dots2] (dots3) {\scriptsize $\dots$};
+        \node[regcell, right=0pt of dots3] (s1) {\scriptsize $S_{1}^{(t)}$};
+        \node[regcell, right=0pt of s1] (s0) {\scriptsize $S_{0}^{(t)}$};
 
-        % Multipliers (Circles) - Tighter vertical gap
-        \node[multiplier, below=0.4cm of sL-1] (c1) {$c_1$};
-        \node[multiplier, below=0.4cm of sL-2] (c2) {$c_2$};
-        \node[multiplier, below=0.4cm of s1] (cL-1) {$c_{\ell-1}$};
-        \node[multiplier, below=0.4cm of s0] (cL) {$c_\ell$};
+        % Multipliers
+        \node[multiplier, below=0.2cm of sL-1] (c1) {$c_1$};
+        \node[multiplier, below=0.2cm of sL-2] (c2) {$c_2$};
+        \node[multiplier, below=0.2cm of s1] (cL-1) {\tiny $c_{\ell\text{-}1}$};
+        \node[multiplier, below=0.2cm of s0] (cL) {$c_\ell$};
 
-        % XOR Gates (Circles with Cross) - Tighter vertical gap
-        \node[xor, below=0.4cm of c1] (x1) {$\oplus$};
+        % XOR Gates
+        \node[xor, below=0.2cm of c1] (x1) {$\oplus$};
         \node[xor, at={(c2 |- x1)}] (x2) {$\oplus$};
         \node[xor, at={(cL-1 |- x1)}] (xL-1) {$\oplus$};
-        
-        % Dotted XOR line
+
         \draw[dotted, thick] (x2) -- (xL-1);
 
-        % Connections: Cells to Multipliers
-        \draw[-{Latex[length=2mm]}] (sL-1) -- (c1);
-        \draw[-{Latex[length=2mm]}] (sL-2) -- (c2);
-        \draw[-{Latex[length=2mm]}] (s1) -- (cL-1);
-        \draw[-{Latex[length=2mm]}] (s0) -- (cL);
-
-        % Connections: Multipliers to XORs
-        \draw[-{Latex[length=2mm]}] (c1) -- (x1);
-        \draw[-{Latex[length=2mm]}] (c2) -- (x2);
-        \draw[-{Latex[length=2mm]}] (cL-1) -- (xL-1);
-        
-        % Connection: cL to the chain
+        % Connections
+        \draw[-{Latex[length=1.5mm]}] (sL-1) -- (c1);
+        \draw[-{Latex[length=1.5mm]}] (sL-2) -- (c2);
+        \draw[-{Latex[length=1.5mm]}] (s1) -- (cL-1);
+        \draw[-{Latex[length=1.5mm]}] (s0) -- (cL);
+        \draw[-{Latex[length=1.5mm]}] (c1) -- (x1);
+        \draw[-{Latex[length=1.5mm]}] (c2) -- (x2);
+        \draw[-{Latex[length=1.5mm]}] (cL-1) -- (xL-1);
         \draw[-] (cL) -- (cL |- x1);
-        \draw[-{Latex[length=2mm]}] (cL |- x1) -- (xL-1);
+        \draw[-{Latex[length=1.5mm]}] (cL |- x1) -- (xL-1);
+        \draw[-{Latex[length=1.5mm]}] (xL-1) -- ++(-1.0,0);
+        \draw[-{Latex[length=1.5mm]}] (x2) -- (x1);
+        \draw[-{Latex[length=1.5mm]}] (x1) -- ++(-1.2,0) |- (sL-1.west);
 
-        % Connections: XOR Chain (Right to Left)
-        \draw[-{Latex[length=2mm]}] (xL-1) -- ++(-1.4,0); % Pointer into the dots
-        \draw[-{Latex[length=2mm]}] (x2) -- (x1);
-
-        % Feedback Loop
-        \draw[-] (x1) -- ++(-0.8,0) |- (sL-1.west);
-
-        % Output
-        \draw[-{Latex[length=2mm]}] (s0) -- ++(1.0,0) node[right] {$z_t$};
-
+        % OUTPUT FROM S0
+        \draw[-{Latex[length=1.5mm]}, thick, blue!70!black] (s0.east) -- ++(1.0,0) node[right, font=\large] {$z_t$};
     \end{tikzpicture}
     }
     \end{center}
 
-    \vspace{0.2cm}
     \begin{itemize}
-        \item État interne au temps $t$ : $S^{(t)} = (S_0^{(t)}, \dots, S_{l-1}^{(t)}) \in \mathbb{F}_2^l$.
-        \item Polynôme de rétroaction primitif : $f(X) = 1 \oplus c_1 X \oplus \dots \oplus c_l X^l$
-        \item Longueur maximale de la séquence générée avant répétition : $T = 2^l - 1$ (m-suite).
+        \item \textbf{État} : $S^{(t)} = (S_0^{(t)}, \dots, S_{\ell-1}^{(t)}) \in \mathbb{F}_2^{\ell}$ \hfill (Def. II-4)
+        \item \textbf{Mise à jour} : Récurrence linéaire sur $\mathbb{F}_2$.
+        \item \textbf{Polynôme de rétroaction} : $f(X) = 1 \oplus c_1 X \oplus \dots \oplus c_{\ell} X^{\ell}$.
+        \item \textbf{Période} : $T = 2^{\ell} - 1$ (m-suite, si $f$ primitif). \hfill (Prop. II-5)
     \end{itemize}
 
     \note{
-        Comme nous l'avons abordé en cours, toute la solidité repose sur le générateur pseudo-aléatoire (le LFSR).
-        
-        Comme j'ai essayé de l'illustrer sur ce schéma TikZ pour la modélisation matérielle, un registre va conserver en mémoire L bits. A chaque cycle d'horloge, l'appareil décale tous les bits d'une position. Le nouveau bit d'entrée est calculé par la somme modulo 2 des sous-registres.
-        L'état va évoluer selon un système d'équations logiques linéaires sur le corps fini $F_2$, et la dynamique du registre est décrite par "le polynôme de rétroaction".
-        
-        Dans les machines Crypto AG, ces polynômes sont primitivement choisis. La Propriété II-5 de notre cours que j'ai pu relire garantit que la période du générateur sera maximale : il génèrera $2^l - 1$ états cryptographiques (la m-suite) avant de se répéter.
+        - Def. II-4 : LFSR = automate linéaire sur $\mathbb{F}_2$.
+        - Prop. II-5 : période max $\iff$ polynôme primitif.
+        - Output : $z_t = S_0^{(t)}$ (sortie directe).
+        - Hardware efficace, mais structure algébrique transparente.
     }
 \end{frame}
 
-% ==============================================================================
-% 4. THE VULNERABILITY (MINERVA)
-% ==============================================================================
-\section{La Faille : Minerva}
+% --- SLIDE 2: VULNERABILITY ---
+\begin{frame}{La Faiblesse : Berlekamp-Massey}
+    \begin{alertblock}{La Linéarité tue la Sécurité}
+        Un LFSR brut est régi par des équations linéaires sur $\mathbb{F}_2$. Son polynôme est reconstructible.
+    \end{alertblock}
 
-\begin{frame}{Le Besoin de Non-Linéarité}
-    Comme vu en cours, un LFSR brut et linéaire est facilement cassable en \textbf{temps polynomial} $\mathcal{O}(l^2)$ par l'\textbf{Algorithme de Berlekamp-Massey}.
+    \vspace{0.2cm}
+    \textbf{L'Algorithme de Berlekamp-Massey :}
+    \begin{itemize}
+        \item Reconstruit le polynôme minimal $f(X)$ d'une suite récurrente linéaire.
+        \item Complexité : $\mathcal{O}(\ell^2)$ opérations sur $\mathbb{F}_2$.
+        \item Il suffit d'observer \textbf{$2\ell$ bits} consécutifs du keystream $z_t$ pour retrouver $S^{(0)}$ et prédire toute la suite.
+    \end{itemize}
 
-    \vspace{0.5cm}
-    Pour contrecarrer cela, Crypto AG utilise la combinaison de multiples registres (R1, R2, R3) mixés via un composant matériel spécifique. C'est l'architecture dite du \textbf{LFSR Filtré}.
+    \vspace{0.2cm}
+    \textit{Pour vendre une machine ``inviolable'', Crypto AG devait briser cette transparence algébrique.}
 
-    \begin{block}{Fonction de filtrage mathématique}
-    $$z_t = g(S^{(t)}_1, S^{(t)}_2, \dots, S^{(t)}_k)$$
-    La fonction de combinaison \textbf{$g$} doit être non-linéaire pour sécuriser le signal et esquiver cette cryptanalyse.
+    \note{
+        - Berlekamp-Massey : Thm. II-8.
+        - $2\ell$ bits de keystream $\Rightarrow$ reconstruction complète de $f(X)$ et $S^{(0)}$.
+        - LFSR brut $=$ sécurité nulle face à un adversaire compétent.
+        - $\Rightarrow$ Nécessité d'introduire de la non-linéarité.
+    }
+\end{frame}
+
+% --- SLIDE 3: SOLUTION ---
+\begin{frame}{La Solution : Générateur à Combinaison}
+    On combine $k$ LFSRs \textbf{indépendants} via une fonction non-linéaire $g$.
+    
+    \begin{center}
+    \resizebox{0.55\linewidth}{!}{
+    \begin{tikzpicture}[thick, scale=0.85, every node/.style={transform shape}]
+        \tikzset{
+            lfsrbox/.style={draw, rounded corners, minimum height=0.7cm, font=\small, align=center, fill=gray!10},
+            gbox/.style={draw, rounded corners, fill=blue!10, minimum width=2.2cm, minimum height=3.8cm, font=\large, align=center}
+        }
+
+        % LFSR blocks (stacked, different widths)
+        \node[lfsrbox, minimum width=5.0cm] (lfsr1) at (0, 1.4)  {$LFSR_1$ \quad (longueur $\ell_1$)};
+        \node[lfsrbox, minimum width=4.0cm] (lfsr2) at (0, 0)     {$LFSR_2$ \quad (longueur $\ell_2$)};
+        \node[lfsrbox, minimum width=3.0cm] (lfsr3) at (0, -1.4)  {$LFSR_3$ \quad (longueur $\ell_3$)};
+
+        % g block
+        \node[gbox] (gbox) at (5.5, 0) {$g$};
+        \node[below=0.01cm of gbox, font=\tiny\itshape, text=blue!70!black] {Combinaison non-linéaire};
+
+        % Arrows LFSR -> g (strictly horizontal)
+        \draw[-{Latex[length=2mm]}, thick] (lfsr1.east) -- node[above, font=\scriptsize] {$x_1^{(t)}$} (lfsr1.east -| gbox.west);
+        \draw[-{Latex[length=2mm]}, thick] (lfsr2.east) -- node[above, font=\scriptsize] {$x_2^{(t)}$} (gbox.west);
+        \draw[-{Latex[length=2mm]}, thick] (lfsr3.east) -- node[above, font=\scriptsize] {$x_3^{(t)}$} (lfsr3.east -| gbox.west);
+
+        % Output z_t
+        \draw[-{Latex[length=2mm]}, thick, red!70!black] (gbox.east) -- ++(1.2,0) node[right, font=\large] {$z_t$};
+    \end{tikzpicture}
+    }
+    \end{center}
+
+    \begin{block}{Générateur à Combinaison (Extension du Cours p.9)}
+        $$z_t = g(x_1^{(t)}, x_2^{(t)}, \dots, x_k^{(t)}) \qquad \text{où } g : \mathbb{F}_2^{k} \to \mathbb{F}_2$$
+        Critère de sécurité : $g$ doit garantir l'\textbf{immunité de corrélation}.
     \end{block}
 
     \note{
-        Toutefois, utiliser un tel registre purement linéaire reste très faible. Comme nous l'avons étudié, l'algorithme de Berlekamp-Massey permet de casser ce type de registre assez facilement, avec une complexité en O de l au carré.
-        
-        Pour se protéger, les équipes de Crypto AG ne laissaient pas la sortie d'un registre linéaire unique alimenter le canal de chiffrement. Ils ont rajouté une couche de protection : l'architecture du "LFSR filtré", également détaillée dans notre chapitre.
-        
-        La suite chiffrante subit une application non-linéaire appelée $g$. Cette logique vient rompre la structure algébrique parfaite du polynôme d'origine pour que l'algorithme de Berlekamp-Massey ne fonctionne plus.
+        - Architecture : k LFSR indépendants combinés par g (Modèle de Siegenthaler).
+        - Réf Cours : Extension du concept de "LFSR filtré" (p.9) à une architecture multi-registres.
+        - Argumentaire : Indispensable pour modéliser l'attaque Divide \& Conquer sur Crypto AG.
+        - Compromis de Siegenthaler : Ordre d'immunité de corrélation vs Degré algébrique.
+        - Sécurité : Repose sur l'impossibilité d'isoler un registre via le keystream.
     }
 \end{frame}
 
 \begin{frame}{Minerva : La Backdoor Statistique}
-    Si la fonction de filtrage $g$ introduit une non-linéarité, de quoi la NSA avait-elle besoin pour intercepter le signal ?
-    
-    \vspace{0.3cm}
-    \textbf{La Vulnérabilité (Minerva) :}
-    La NSA conçoit en secret une fonction $g$ biaisée en silicium. Le filtrage échoue sciemment à respecter l'exigence "\textbf{d'immunité de corrélation}".
+    La NSA conçoit en secret une fonction $g$ \textbf{biaisée} gravée en silicium.
+    Le combineur échoue sciemment à satisfaire le critère d'\textbf{immunité de corrélation}.
 
     \vspace{0.3cm}
-    \begin{alertblock}{La Loi de Fuite Statistique}
-        La sortie du générateur $z_t$ contient un \textbf{biais d'information} vis-à-vis de l'un des registres internes, par exemple le registre $L_1$. Il existe un biais $\epsilon \neq 0$ tel que :
-        $$P(z_t = L_{1,t}) = 0.5 + \epsilon$$
+    \begin{alertblock}{Le Biais Exploitable}
+        Il existe un registre $LFSR_1$ et un biais $\epsilon > 0$ tel que :
+        $$P(z_t = x_1^{(t)}) = 0.5 + \epsilon$$
     \end{alertblock}
 
     \vspace{0.3cm}
-    Au lieu de réagir comme une pièce de monnaie parfaite ($p=0.5$), $z_t$ aura tendance à "valider" excessivement les bits générés en interne par l'un des simples registres sous-jacent.
+    \textbf{Conséquence :} Le keystream $z_t$ ``fuite'' de l'information sur la sortie $x_1^{(t)}$ d'un registre individuel.
+
+    \vspace{0.2cm}
+    \textit{Ce biais est invisible à l'usage quotidien, mais statistiquement exploitable avec suffisamment de ciphertext.}
 
     \note{
-        Là où d'autres architectures résistent très bien, voici la trappe que j'ai identifiée. Les mathématiciens américains vont forcer les ingénieurs locaux à adopter une architecture logique "Minerva".
-        
-        Minerva consiste concrètement à manipuler cette fameuse fonction de filtrage $g$ pour rater sciemment le critère d'Immunité de Corrélation. 
-        
-        Cela signifie mathématiquement que la probabilité que le bit chiffrant $z_t$ soit directement corrélé au bit généré en profondeur par le mini registre $L1$ n'est pas de 50\%. L'attaque exploite ce biais statistique $\epsilon > 0$. Même si la séquence a une énorme période, elle contient de manière déterministe un murmure constant de l'état interne de ses propres engrenages. C'est ce défaut qui permet d'écouter les messages en clair !
+        - Minerva = violation délibérée de l'immunité de corrélation.
+        - \textbf{Astuce NSA} : degré algébrique de $g$ gardé élevé $\Rightarrow$ Berlekamp-Massey reste incalculable $\Rightarrow$ rassure les ingénieurs de Crypto AG.
+        - Mais immunité de corrélation sacrifiée $\Rightarrow$ attaque par corrélation possible.
+        - Compromis de Siegenthaler exploité à l'envers : la faiblesse est cachée derrière la complexité apparente.
     }
 \end{frame}
 
@@ -411,43 +444,41 @@
 % ==============================================================================
 \section{L'Attaque (Divide \& Conquer)}
 
-\begin{frame}{Conséquences Mathématiques : \textit{Divide \& Conquer}}
-    Sans faille, tester la clé (définie par l'état initial des registres) revient à tester un espace d'états immense.
+\begin{frame}{L'Attaque : \textit{Divide \& Conquer}}
+    Le biais $\epsilon$ permet d'attaquer chaque registre $L_i$ \textbf{indépendamment}.
 
-    \vspace{0.5cm}
+    \vspace{0.3cm}
     \begin{columns}
         \column{0.5\textwidth}
         \begin{center}
-            \textbf{Théorie Cryptanalytique Pure}\\
+            \textbf{Brute Force (sans backdoor)}\\
             \vspace{0.2cm}
-            \textcolor{red}{\Large $\mathcal{O}(2^{\sum l_i})$}\\
+            \textcolor{red}{\Large $\mathcal{O}(2^{\ell_1 + \ell_2 + \ell_3})$}\\
             \vspace{0.2cm}
-            (Somme Produit)\\
-            \textit{Exigence Brute Force Incalculable (Années/Siècles).}
+            Espace joint\\
+            \textit{Incalculable (siècles).}
         \end{center}
 
         \column{0.5\textwidth}
         \begin{center}
-            \textbf{La Réalité Minerva}\\
+            \textbf{Corrélation (Minerva)}\\
             \vspace{0.2cm}
-            \textcolor{green}{\Large $\mathcal{O}(\sum 2^{l_i})$}\\
+            \textcolor{green!60!black}{\Large $\mathcal{O}(2^{\ell_1} + 2^{\ell_2} + 2^{\ell_3})$}\\
             \vspace{0.2cm}
-            (Somme Linéaire)\\
-            \textit{Approche Linéaire.\\Temps de calcul : Secondes.}
+            Registres isolés\\
+            \textit{Quelques secondes.}
         \end{center}
     \end{columns}
 
-    \vspace{0.6cm}
-    Avec le biais $\epsilon > 0$, l'attaquant écoute la ligne radio (et un brin de texte clair probable) :
-    Il compare statistiquement chaque état candidat du premier registre unitaire $L_1$ avec le texte capté. La vraie clé se dégagera massivement du bruit.
+    \vspace{0.4cm}
+    \textbf{Méthode :} Avec du \textit{plaintext probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ au keystream capté. Le vrai état se démarque par corrélation.
 
     \note{
-        Pour bien saisir l'astuce : regardons la différence de temps de calcul.
-        
-        Sans la faille Minerva, je devrais attaquer l'espace gigantesque de l'état combiné de tous les registres. L'ordre de grandeur est la taille exponentielle de la somme des registres (O de 2 puissance la somme). En brute force dans les années 70, ces sommes prenaient des siècles incalculables.
-        
-        Mais avec Minerva, je bascule sur l'approche de la corrélation et du concept de "Divide and Conquer". Je commence ma recherche sur chaque petit registre que j'isole grâce aux corrélations mathématiques induites par le biais epsilon.
-        Le temps de calcul chute brutalement de la "somme au produit des registres combinés", à une simple "somme linéaire" des exponentielles, rendant le déchiffrement quasiment instantané pour la CIA.
+        - \textbf{Known-Plaintext Attack} : attaque à texte clair connu.
+        - Source du plaintext : en-têtes régulières des télex diplomatiques (``To Mr Ambassador...'').
+        - $m_t \oplus c_t = z_t$ $\Rightarrow$ keystream récupéré.
+        - Isoler $LFSR_1$ grâce au biais $\epsilon_1$, soustraire, puis attaquer $LFSR_2$, etc.
+        - Exponentielle de la somme $\to$ somme d'exponentielles.
     }
 \end{frame}
 
@@ -471,8 +502,8 @@
         \draw[-{Latex[length=3mm]}] (attack2) -- (finish);
 
         % Annotations Complexities
-        \node[below=0.3cm of attack1, text=red, font=\large] {$\mathcal{O}(2^{l_1})$};
-        \node[below=0.3cm of attack2, fill=white, inner sep=1pt, text=red, font=\large] {$\mathcal{O}(2^{l_2})$};
+        \node[below=0.3cm of attack1, text=red, font=\large] {$\mathcal{O}(2^{\ell_1})$};
+        \node[below=0.3cm of attack2, fill=white, inner sep=1pt, text=red, font=\large] {$\mathcal{O}(2^{\ell_2})$};
     \end{tikzpicture}
     }
     \end{center}
@@ -480,20 +511,18 @@
     \vspace{0.3cm}
     \textbf{Le processus itératif de l'attaque NSA} :
     \begin{enumerate}
-        \item Capter le chiffré cible, et y associer du "Plaintext-Probable" (mot connu, salutation diplomatique, entête télex).
-        \item Simuler le registre $L_1$ pour toutes ses clés partielles ($2^{l_1}$ états).
-        \item Conserver la clé de $L_1$ qui valide la plus haute corrélation avec le bruit.
-        \item Affaiblir mathématiquement le résidu et continuer sur les registres suivants.
+        \item Capter le chiffré cible, et y associer du ``Plaintext-Probable'' (en-tête télex, salutation diplomatique).
+        \item Simuler $LFSR_1$ pour toutes ses clés partielles ($2^{\ell_1}$ états).
+        \item Conserver la clé de $LFSR_1$ qui maximise la corrélation avec le keystream.
+        \item Soustraire l'influence de $LFSR_1$ et continuer sur les registres suivants.
     \end{enumerate}
 
     \note{
-        Voici schématiquement comment je modélise l'attaque en cascade appliquée concrètement sur les flux télégraphiques de la NSA.
-        
-        A l'étape 1, j'intercepte le flux. En modélisant le "plaintext probable" (comme on l'étudie classiquement, de l'en-tête diplomatique redondante du format "To Mr Ambassador"), je réalise le calcul du XOR exclusif.
-        
-        Une fois cette information de base captée, à vide, mon supercalculateur compare l'état du tout premier registre simulé aux bits capturés, assisté par l'analyse algorithmique de ce fameux "bruit" statistique. Quand une clé partielle concorde, je l'isole par le fort pic de corrélation (ici en étape 2). 
-        
-        Je soustrait ensuite "l'influence" (étape 3) de ce premier module cassé, purifie les calculs suivants, et relance simplement cette cascade pour les registres L2 puis L3 ! Le système s'effondre de l'intérieur, de registre en registre. Le chiffrement est cassé !
+        - Attaque en cascade : chaque $LFSR_i$ est cassé séquentiellement.
+        - Étape 1 : $c_t \oplus m_t = z_t$ (known-plaintext).
+        - Étape 2 : brute-force sur $2^{\ell_1}$ états de $LFSR_1$, corrélation avec $z_t$.
+        - Étape 3 : soustraire $x_1^{(t)}$, purifier le signal résiduel.
+        - Itérer pour $LFSR_2$, $LFSR_3$ $\Rightarrow$ clé totale reconstruite.
     }
 \end{frame}
 
@@ -575,25 +604,24 @@
 
 \begin{frame}{Références Bibliographiques}
     \begin{itemize}
-        \item \textbf{Support de Cours Fondamental :}
+        \item \textbf{Support de Cours :}
         \begin{itemize}
             \item G. Castagnos, \textit{Cours de Cryptologie 2025-2026}, Univ. Bordeaux.
-            \item \textit{Chapitre II : Chiffrement par flot, suites pseudo-aléatoires, LFSR et propriétés d'immunité.}
-            \item Support formel pour la modélisation mathématique du Berlekamp-Massey et de la complexité algorithmique.
+            \item Chap. II : Chiffrements par flot, LFSR, Berlekamp-Massey, immunité de corrélation.
         \end{itemize}
 
-        \vspace{0.4cm}
-        \item \textbf{Aspects Géopolitiques \& Sources Opérationnelles :}
+        \vspace{0.3cm}
+        \item \textbf{Sources Historiques \& Techniques :}
         \begin{itemize}
-            \item \textit{The intelligence coup of the century} (Operation Rubicon). Greg Miller, Washington Post, 2020.
-            \item \textit{"The Swiss Cheese of Cryptography: Historical hardware and modern analysis"}, Thomas Pornin, SSTIC (\textit{Symposium sur la sécurité des technologies de l'information}).
-            \item Analyse Reverse-Engineering des HC-7000, J. Gressel \& Chaos Computer Club (CCC), Projet \textit{\#CRYPTOLEAKS}, Leipzig (2020).
+            \item G. Miller, \textit{``The intelligence coup of the century''}, Washington Post, 2020.
+            \item T. Pornin, \textit{``The Swiss Cheese of Cryptography''}, SSTIC.
+            \item J. Gressel \& CCC, Reverse-Engineering HC-7000, \textit{\#CRYPTOLEAKS}, 2020.
         \end{itemize}
     \end{itemize}
     \note{
-        Afin de formaliser au mieux ce cours et de rigoureusement valider mes calculs et asymétries de modélisation mathématique du Berlekamp-Massey, je me suis basé sur notre Chapitre 2 du Master. C'est véritablement grâce au "Cours de Cryptologie" de Monsieur Guilhem Castagnos que j'ai pu illustrer pourquoi un algorithme d'apparence sûre pour le grand public s'avérait tragiquement manipulable.
-        
-        Sur l'aspect du gigantesque scandale "Opération Rubicon", les documents formels déclassifiés par le Washington Post en 2020 ont guidé mes bases. L'exploration de la "faille Minerva", quant-à-elle, trouve ses repères visuels par l'impressionnant travail de reverse-engineering dévoilé ici-même à Leipzig en 2020 par the Chaos Computer Club. 
+        - Fondements mathématiques : Chap. II (Castagnos), Def. II-4, Prop. II-5, Thm. II-8.
+        - Source primaire : documents CIA déclassifiés, publiés par le Washington Post.
+        - Aspects techniques : reverse-engineering par le CCC (Leipzig 2020).
     }
 \end{frame}
 
@@ -608,22 +636,19 @@
 
     \vspace{1cm}
     \normalsize
-    \textit{"Trust, but Verify."}\\
+    \textit{``Trust, but Verify.''}\\
     \vspace{0.2cm}
-    \small -- \textbf{Ronald Reagan} (Proverbe des sommets sur le nucléaire, Guerre Froide)
+    \small -- \textbf{Ronald Reagan}, sommets nucléaires (1987)
     
     \vspace{0.5cm}
     \normalsize
-    \textit{Ou plutôt aujourd'hui : "Trust no one, and Open-Source everything."}
+    \textit{Ou plutôt : ``Don't trust. Open-Source everything.''}
 
     \note{
-        J'arrivais donc à l'irréfutable conclusion que l'Opération Rubicon marque la fin définitive du concept dangereux de "Security by Obscurity".
-        
-        L'histoire vient ici nous démontrer rudement que confier le secret de communications étatiques à un matériel propriétaire et exclusif non certifié de façon ouverte – même Suisse ! – ouvre la porte à des failles à l'échelle mondiale.
-        
-        Je suis intimement convaincu qu'en tant que professionnels de la SSI de demain, seule l'ouverture public ("Open-Source algorithms" du type AES ou standards NIST certifiés), associée au contrôle d'audit de sécurité des communautés mathématiques, pourra empêcher ce type de vulnérabilités ! "Trust no one".
-        
-        Je vous remercie vivement pour m'avoir écouté pendant ces 15 minutes. N'hésitez-pas si vous avez des questions sur l'algorithmique LFSR, la notion de Corrélation ou même sur cette incroyable affaire d'espionnage, je serai ravi d'y répondre. 
+        - L'Opération Rubicon est la preuve définitive que ``Security by Obscurity'' est une faille.
+        - Confier des communications étatiques à du hardware propriétaire non-audité $=$ backdoor garantie.
+        - La leçon : seuls les algorithmes publics (AES, standards NIST) audités par la communauté offrent une sécurité réelle.
+        - Merci. Questions bienvenues sur les LFSR, la corrélation, ou le contexte géopolitique.
     }
 \end{frame}
 
