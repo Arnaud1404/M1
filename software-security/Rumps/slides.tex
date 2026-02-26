@@ -368,49 +368,53 @@
     }
 \end{frame}
 
-% --- SLIDE 3: SOLUTION ---
 \begin{frame}{La Solution : Générateur à Combinaison}
-    On combine $k$ LFSRs \textbf{indépendants} via une fonction non-linéaire $g$.
-    
-    \begin{center}
-    \resizebox{0.55\linewidth}{!}{
-    \begin{tikzpicture}[thick, scale=0.85, every node/.style={transform shape}]
-        \tikzset{
-            lfsrbox/.style={draw, rounded corners, minimum height=0.7cm, font=\small, align=center, fill=gray!10},
-            gbox/.style={draw, rounded corners, fill=blue!10, minimum width=2.2cm, minimum height=3.8cm, font=\large, align=center}
-        }
+    \begin{columns}[c]
+        \begin{column}{0.45\textwidth}
+            \centering
+            \resizebox{\linewidth}{!}{
+            \begin{tikzpicture}[thick, scale=0.8, every node/.style={transform shape}]
+                \tikzset{
+                    lfsrbox/.style={draw, rounded corners, minimum height=0.8cm, font=\small, align=center, fill=gray!10},
+                    gbox/.style={draw, rounded corners, fill=blue!10, minimum width=2.5cm, minimum height=5.0cm, font=\large, align=center}
+                }
 
-        % LFSR blocks (stacked, different widths)
-        \node[lfsrbox, minimum width=5.0cm] (lfsr1) at (0, 1.4)  {$LFSR_1$ \quad (longueur $\ell_1$)};
-        \node[lfsrbox, minimum width=4.0cm] (lfsr2) at (0, 0)     {$LFSR_2$ \quad (longueur $\ell_2$)};
-        \node[lfsrbox, minimum width=3.0cm] (lfsr3) at (0, -1.4)  {$LFSR_3$ \quad (longueur $\ell_3$)};
+                \node[lfsrbox, minimum width=6.5cm] (lfsr1) at (0, 2.2)  {$LFSR_1$ \quad (longueur $\ell_1$)};
+                \node[lfsrbox, minimum width=6.0cm] (lfsr2) at (0, 0.8)  {$LFSR_2$ \quad (longueur $\ell_2$)};
+                \node at (0, -0.3) {\Huge $\vdots$};
+                \node[lfsrbox, minimum width=5.0cm] (lfsrk) at (0, -1.4) {$LFSR_k$ \quad (longueur $\ell_k$)};
 
-        % g block
-        \node[gbox] (gbox) at (5.5, 0) {$g$};
-        \node[below=0.01cm of gbox, font=\tiny\itshape, text=blue!70!black] {Combinaison non-linéaire};
+                \node[gbox] (gbox) at (6.5, 0.4) {$g$};
+                \node[below=0.01cm of gbox, font=\scriptsize\itshape, text=blue!70!black] {Combinaison non-linéaire};
 
-        % Arrows LFSR -> g (strictly horizontal)
-        \draw[-{Latex[length=2mm]}, thick] (lfsr1.east) -- node[above, font=\scriptsize] {$x_1^{(t)}$} (lfsr1.east -| gbox.west);
-        \draw[-{Latex[length=2mm]}, thick] (lfsr2.east) -- node[above, font=\scriptsize] {$x_2^{(t)}$} (gbox.west);
-        \draw[-{Latex[length=2mm]}, thick] (lfsr3.east) -- node[above, font=\scriptsize] {$x_3^{(t)}$} (lfsr3.east -| gbox.west);
+                \draw[-{Latex[length=3mm]}, thick] (lfsr1.east) -- node[above, font=\scriptsize, midway] {$x_1^{(t)}$} (lfsr1.east -| gbox.west);
+                \draw[-{Latex[length=3mm]}, thick] (lfsr2.east) -- node[above, font=\scriptsize, midway] {$x_2^{(t)}$} (lfsr2.east -| gbox.west);
+                \draw[-{Latex[length=3mm]}, thick] (lfsrk.east) -- node[above, font=\scriptsize, midway] {$x_k^{(t)}$} (lfsrk.east -| gbox.west);
 
-        % Output z_t
-        \draw[-{Latex[length=2mm]}, thick, red!70!black] (gbox.east) -- ++(1.2,0) node[right, font=\large] {$z_t$};
-    \end{tikzpicture}
-    }
-    \end{center}
+                \draw[-{Latex[length=4mm]}, thick, red!70!black] (gbox.east) -- ++(1.5,0) node[right, font=\Huge] {$z_t$};
+            \end{tikzpicture}
+            }
+        \end{column}
 
-    \begin{block}{Générateur à Combinaison (Extension du Cours p.9)}
-        $$z_t = g(x_1^{(t)}, x_2^{(t)}, \dots, x_k^{(t)}) \qquad \text{où } g : \mathbb{F}_2^{k} \to \mathbb{F}_2$$
-        Critère de sécurité : $g$ doit garantir l'\textbf{immunité de corrélation}.
-    \end{block}
+        \begin{column}{0.5\textwidth}
+            On combine $k$ LFSRs \textbf{indépendants} via une fonction non-linéaire $g$.
+
+            \vspace{0.4cm}
+            \begin{block}{Propriétés du Générateur}
+                \begin{itemize}
+                    \item \textbf{Génération :} $z_t = g(x_1^{(t)}, \dots, x_k^{(t)})$
+                    \item \textbf{Période Maximale :} Les $\ell_i$ sont \textbf{premières entre elles}.
+                    \item \textbf{Résultat :} $T_{tot} = \prod_{i=1}^k (2^{\ell_i} - 1)$.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
 
     \note{
-        - Architecture : k LFSR indépendants combinés par g (Modèle de Siegenthaler).
-        - Réf Cours : Extension du concept de "LFSR filtré" (p.9) à une architecture multi-registres.
-        - Argumentaire : Indispensable pour modéliser l'attaque Divide \& Conquer sur Crypto AG.
-        - Compromis de Siegenthaler : Ordre d'immunité de corrélation vs Degré algébrique.
-        - Sécurité : Repose sur l'impossibilité d'isoler un registre via la suite chiffrante.
+        - Réalité industrielle : k entre 3 et 6 LFSRs (ASIC compacts).
+        - \textbf{Pourquoi des longueurs différentes ?} Si $\ell_i$ premières entre elles, la période globale est le produit des périodes individuelles (gigantesque pour un coût minime).
+        - \textbf{Compromis de Siegenthaler} : Degré algébrique vs Immunité de corrélation.
+        - \textbf{Le Leurre} : La NSA a maximisé le degré algébrique de $g$ pour rassurer les ingénieurs.
     }
 \end{frame}
 
@@ -453,7 +457,7 @@
         \begin{center}
             \textbf{Brute Force (sans backdoor)}\\
             \vspace{0.2cm}
-            \textcolor{red}{\Large $\mathcal{O}(2^{\ell_1 + \ell_2 + \ell_3})$}\\
+            \textcolor{red}{\Large $\mathcal{O}(2^{\sum_{i=1}^k \ell_i})$}\\
             \vspace{0.2cm}
             Espace joint\\
             \textit{Incalculable (siècles).}
@@ -463,7 +467,7 @@
         \begin{center}
             \textbf{Corrélation (Minerva)}\\
             \vspace{0.2cm}
-            \textcolor{green!60!black}{\Large $\mathcal{O}(2^{\ell_1} + 2^{\ell_2} + 2^{\ell_3})$}\\
+            \textcolor{green!60!black}{\Large $\mathcal{O}(\sum_{i=1}^k 2^{\ell_i})$}\\
             \vspace{0.2cm}
             Registres isolés\\
             \textit{Quelques secondes.}
@@ -485,44 +489,54 @@
 
 \begin{frame}[fragile]{Visualisation de l'Attaque en Cascade}
     \begin{center}
-    \resizebox{\linewidth}{!}{
-    \begin{tikzpicture}[auto, thick, node distance=1.5cm and 2cm]
-        % Nodes
-        \node[draw, rounded corners, fill=red!10, text width=3cm, align=center] (capture) {1. Capture\\de Données $\approx z_t$};
-        \node[draw, rounded corners, fill=yellow!20, text width=3.5cm, align=center, right=of capture] (attack1) {2. Attaque sur $L_1$\\ (Biais $\epsilon_1$)};
-        \node[draw, rounded corners, fill=green!20, text width=3.5cm, align=center, right=of attack1] (remove1) {3. Soustraction de\\ l'influence $L_1$};
-        \node[draw, rounded corners, fill=yellow!20, text width=3.5cm, align=center, right=of remove1] (attack2) {4. Attaque sur $L_2$\\ (Biais $\epsilon_2$)};
-        
-        \node[draw, rounded corners, fill=blue!10, text width=4.5cm, align=center, below=1.5cm of attack2] (finish) {5. État Initial Reconstruit\\ en cascade (\textbf{Clair})};
+    \resizebox{0.85\linewidth}{!}{
+    \begin{tikzpicture}[auto, thick, node distance=1.5cm and 1.5cm]
+        \tikzset{
+            stepnode/.style={draw, rounded corners, align=center, text width=4.2cm, minimum height=1.2cm, font=\small},
+            capture/.style={stepnode, fill=red!10},
+            attack/.style={stepnode, fill=yellow!20},
+            remove/.style={stepnode, fill=green!20},
+            finish/.style={stepnode, fill=blue!10, text width=6.5cm, font=\bfseries}
+        }
 
-        % Arrows
-        \draw[-{Latex[length=3mm]}] (capture) -- (attack1);
-        \draw[-{Latex[length=3mm]}] (attack1) -- node[above, font=\small] {Succès} (remove1);
-        \draw[-{Latex[length=3mm]}] (remove1) -- (attack2);
-        \draw[-{Latex[length=3mm]}] (attack2) -- (finish);
+        % --- ROW 1 ---
+        \node[capture] (c) {1. Capture de Données\\($z_t = m_t \oplus c_t$)};
+        \node[attack, right=of c] (a1) {2. Attaque sur $LFSR_1$\\\textcolor{red}{$\mathcal{O}(2^{\ell_1})$}};
+        \node[remove, right=of a1] (r1) {3. Retrait influence\\ de $LFSR_1$};
 
-        % Annotations Complexities
-        \node[below=0.3cm of attack1, text=red, font=\large] {$\mathcal{O}(2^{\ell_1})$};
-        \node[below=0.3cm of attack2, fill=white, inner sep=1pt, text=red, font=\large] {$\mathcal{O}(2^{\ell_2})$};
+        % --- ROW 2 ---
+        \node[attack, below=1.8cm of c] (a2) {4. Attaque sur $LFSR_2$\\\textcolor{red}{$\mathcal{O}(2^{\ell_2})$}};
+        \node[stepnode, fill=gray!5, right=of a2] (dots) {\Huge $\dots$};
+        \node[attack, right=of dots] (ak) {5. Attaque finale sur $LFSR_k$\\\textcolor{red}{$\mathcal{O}(2^{\ell_k})$}};
+
+        % --- ROW 3 ---
+        \node[finish, below=1.5cm of dots] (f) {État Reconstruit $\implies$ Clair Identifié};
+
+        % Arrows Row 1
+        \draw[-{Latex[length=3mm]}] (c) -- (a1);
+        \draw[-{Latex[length=3mm]}] (a1) -- (r1);
+
+        % Serpent Connector Row 1 -> Row 2
+        \draw[-{Latex[length=3mm]}, rounded corners=10pt] (r1.south) -- ++(0,-0.6) -| (a2.north);
+
+        % Arrows Row 2
+        \draw[-{Latex[length=3mm]}] (a2) -- (dots);
+        \draw[-{Latex[length=3mm]}] (dots) -- (ak);
+
+        % Serpent Connector Row 2 -> Row 3
+        \draw[-{Latex[length=3mm]}, rounded corners=10pt] (ak.south) -- ++(0,-0.6) -| (f.north);
+
     \end{tikzpicture}
     }
     \end{center}
 
     \vspace{0.3cm}
-    \textbf{Le processus itératif de l'attaque NSA} :
-    \begin{enumerate}
-        \item Capter le chiffré cible, et y associer du ``Clair probable'' (en-tête télex, salutation diplomatique).
-        \item Simuler $LFSR_1$ pour toutes ses clés partielles ($2^{\ell_1}$ états).
-        \item Conserver la clé de $LFSR_1$ qui maximise la corrélation avec la suite chiffrante.
-        \item Soustraire l'influence de $LFSR_1$ et continuer sur les registres suivants.
-    \end{enumerate}
+    \textbf{Complexité Totale :} $\mathcal{O}(\sum_{i=1}^{k} 2^{\ell_i}) \ll \mathcal{O}(2^{\sum_{i=1}^{k} \ell_i})$
 
     \note{
-        - Attaque en cascade : chaque $LFSR_i$ est cassé séquentiellement.
-        - Étape 1 : $c_t \oplus m_t = z_t$ (clair connu).
-        - Étape 2 : brute-force sur $2^{\ell_1}$ états de $LFSR_1$, corrélation avec $z_t$.
-        - Étape 3 : soustraire $x_1^{(t)}$, purifier le signal résiduel.
-        - Itérer pour $LFSR_2$, $LFSR_3$ $\Rightarrow$ clé totale reconstruite.
+        - Attaque itérative : Brise l'exposant (somme des longueurs) en une somme linéaire.
+        - Pour k=6, l'attaque prend quelques secondes quand le brute-force prendrait des millénaires.
+        - Chaque étape utilise le signal "purifié" de l'influence des registres déjà cassés.
     }
 \end{frame}
 
