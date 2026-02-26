@@ -250,7 +250,7 @@
 
     \vspace{0.3cm}
     Les machines Crypto AG utilisent un \textbf{chiffrement par flot synchrone}.
-    Le plaintext $m_t$ est chiffré bit à bit avec la suite chiffrante $z_t$ :
+    Le message clair $m_t$ est chiffré bit à bit avec la suite chiffrante $z_t$ :
     
     \begin{block}{Équation Fondamentale}
     $$c_t = m_t \oplus z_t$$
@@ -428,7 +428,7 @@
     \textbf{Conséquence :} La suite chiffrante $z_t$ ``fuite'' de l'information sur la sortie $x_1^{(t)}$ d'un registre individuel.
 
     \vspace{0.2cm}
-    \textit{Ce biais est invisible à l'usage quotidien, mais statistiquement exploitable avec suffisamment de ciphertext.}
+    \textit{Ce biais est invisible à l'usage quotidien, mais statistiquement exploitable avec suffisamment de chiffré.}
 
     \note{
         - Minerva = violation délibérée de l'immunité de corrélation.
@@ -471,11 +471,11 @@
     \end{columns}
 
     \vspace{0.4cm}
-    \textbf{Méthode :} Avec du \textit{plaintext probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ à la suite chiffrante captée. Le vrai état se démarque par corrélation.
+    \textbf{Méthode :} Avec du \textit{clair probable} (en-tête diplomatique, salutation standard), l'attaquant compare statistiquement chaque état candidat de $L_1$ à la suite chiffrante captée. Le vrai état se démarque par corrélation.
 
     \note{
-        - \textbf{Known-Plaintext Attack} : attaque à texte clair connu.
-        - Source du plaintext : en-têtes régulières des télex diplomatiques (``To Mr Ambassador...'').
+        - \textbf{Attaque à clair connu}.
+        - Source du clair : en-têtes régulières des télex diplomatiques (``To Mr Ambassador...'').
         - $m_t \oplus c_t = z_t$ $\Rightarrow$ suite chiffrante récupérée.
         - Isoler $LFSR_1$ grâce au biais $\epsilon_1$, soustraire, puis attaquer $LFSR_2$, etc.
         - Exponentielle de la somme $\to$ somme d'exponentielles.
@@ -493,7 +493,7 @@
         \node[draw, rounded corners, fill=green!20, text width=3.5cm, align=center, right=of attack1] (remove1) {3. Soustraction de\\ l'influence $L_1$};
         \node[draw, rounded corners, fill=yellow!20, text width=3.5cm, align=center, right=of remove1] (attack2) {4. Attaque sur $L_2$\\ (Biais $\epsilon_2$)};
         
-        \node[draw, rounded corners, fill=blue!10, text width=4.5cm, align=center, below=1.5cm of attack2] (finish) {5. État Initial Reconstruit\\ en cascade (\textbf{Plaintext})};
+        \node[draw, rounded corners, fill=blue!10, text width=4.5cm, align=center, below=1.5cm of attack2] (finish) {5. État Initial Reconstruit\\ en cascade (\textbf{Clair})};
 
         % Arrows
         \draw[-{Latex[length=3mm]}] (capture) -- (attack1);
@@ -511,7 +511,7 @@
     \vspace{0.3cm}
     \textbf{Le processus itératif de l'attaque NSA} :
     \begin{enumerate}
-        \item Capter le chiffré cible, et y associer du ``Plaintext-Probable'' (en-tête télex, salutation diplomatique).
+        \item Capter le chiffré cible, et y associer du ``Clair probable'' (en-tête télex, salutation diplomatique).
         \item Simuler $LFSR_1$ pour toutes ses clés partielles ($2^{\ell_1}$ états).
         \item Conserver la clé de $LFSR_1$ qui maximise la corrélation avec la suite chiffrante.
         \item Soustraire l'influence de $LFSR_1$ et continuer sur les registres suivants.
@@ -519,7 +519,7 @@
 
     \note{
         - Attaque en cascade : chaque $LFSR_i$ est cassé séquentiellement.
-        - Étape 1 : $c_t \oplus m_t = z_t$ (known-plaintext).
+        - Étape 1 : $c_t \oplus m_t = z_t$ (clair connu).
         - Étape 2 : brute-force sur $2^{\ell_1}$ états de $LFSR_1$, corrélation avec $z_t$.
         - Étape 3 : soustraire $x_1^{(t)}$, purifier le signal résiduel.
         - Itérer pour $LFSR_2$, $LFSR_3$ $\Rightarrow$ clé totale reconstruite.
