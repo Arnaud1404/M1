@@ -162,14 +162,14 @@
         \begin{center}
             \includegraphics[height=3.5cm]{images/hagelin.jpg}\\
             \vspace{0.1cm}
-            \tiny \textit{Une machine de type Hagelin CX-52.}
+            \tiny \textit{Une machine de la gamme électronique HC-500.}
         \end{center}
     \end{columns}
 
     \note{
       \begin{itemize}
         \item \textbf{Neutralité suisse :} Aura politique $\Rightarrow$ fournisseur idéal pour tous les gouvernements.
-        \item \textbf{Hardware lourd :} Blocs physiques (Hagelin) considérés inviolables.
+        \item \textbf{Hardware lourd :} Blocs physiques considérés inviolables.
         \item \textbf{Boîte noire :} Algorithmes HC-500 gravés dans le silicium, aucune doc mathématique fournie.
         \item \textbf{Danger :} ``Security by Obscurity'' $=$ concept fondamentalement vicié en cryptographie.
       \end{itemize}
@@ -218,14 +218,14 @@
 \begin{frame}{L'Impact Historique : Exploitation des failles}
     \textbf{Cas n°1 : La Guerre des Malouines (1982)}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
     \begin{itemize}
         \item \textbf{Le Contexte :} Conflit armé entre le Royaume-Uni et l'Argentine (cliente de Crypto AG, ``Version B'').
-        \item \textbf{L'Exploitation :} La junte militaire argentine chiffrait l'intégralité de ses communications navales tactiques avec des machines de la série Hagelin CX-52 / HC-500.
+        \item \textbf{L'Exploitation :} La junte militaire argentine chiffrait l'intégralité de ses communications navales tactiques avec des machines de la série électronique HC-500.
         \item \textbf{Résultat Opérationnel :} La NSA déchiffre les positions navales argentines en temps réel et transmet les renseignements à Londres via les accords Five Eyes.
     \end{itemize}
 
-    \vspace{0.5cm}
+    \vspace{0.3cm}
     \begin{columns}
         \column{0.8\textwidth}
         \begin{alertblock}{Asymétrie du Renseignement}
@@ -236,7 +236,7 @@
     \note{
       \begin{itemize}
         \item \textbf{Cas concret :} Guerre des Malouines, 1982.
-        \item \textbf{Confiance aveugle :} Argentine chiffrait tout via Hagelin CX-52/HC-500 (Version B).
+        \item \textbf{Confiance aveugle :} Argentine chiffrait tout via série HC-500 (Version B).
         \item \textbf{Compromission totale :} Canaux tactiques et stratégiques lisibles par la NSA.
         \item \textbf{Relais Five Eyes :} NSA déchiffre en temps réel $\Rightarrow$ renseignements transmis à Londres.
         \item \textbf{Avantage décisif :} UK connaissait positions navales argentines avant les frappes.
@@ -572,12 +572,12 @@
         \node[remove, right=of a1] (r1) {3. Retrait influence\\ de $LFSR_1$};
 
         % --- ROW 2 ---
-        \node[attack, below=1.8cm of c] (a2) {4. Attaque sur $LFSR_2$\\\textcolor{red}{$\mathcal{O}(2^{\ell_2})$}};
+        \node[attack, below=1.4cm of c] (a2) {4. Attaque sur $LFSR_2$\\\textcolor{red}{$\mathcal{O}(2^{\ell_2})$}};
         \node[stepnode, fill=gray!5, right=of a2] (dots) {\Huge $\dots$};
         \node[attack, right=of dots] (ak) {5. Attaque finale sur $LFSR_k$\\\textcolor{red}{$\mathcal{O}(2^{\ell_k})$}};
 
         % --- ROW 3 ---
-        \node[finish, below=1.5cm of dots] (f) {État Reconstruit $\implies$ Clair Identifié};
+        \node[finish, below=1.2cm of dots] (f) {État Reconstruit $\implies$ Clair Identifié};
 
         % Arrows Row 1
         \draw[-{Latex[length=3mm]}] (c) -- (a1);
@@ -597,7 +597,7 @@
     }
     \end{center}
 
-    \vspace{0.3cm}
+    \vspace{0.1cm}
     \textbf{Complexité Totale :} $\mathcal{O}(\sum_{i=1}^{k} 2^{\ell_i}) \ll \mathcal{O}(2^{\sum_{i=1}^{k} \ell_i})$
 
     \begin{tikzpicture}[remember picture,overlay]
@@ -614,13 +614,65 @@
 \end{frame}
 
 % ==============================================================================
-% 6. LA CHUTE DE L'EMPIRE CRYPTO AG (HANS BÜHLER)
+% 6. LA CHUTE DE L'EMPIRE CRYPTO AG
 % ==============================================================================
 \section{La Chute d'Operation Rubicon}
 
+% --- SLIDE 13 : MENGIA CAFLISCH (années 1980) ---
+\begin{frame}{Années 1980 : La Menace Interne (Mengia Caflisch)}
+    \vspace{-10pt}
+    \begin{columns}
+        \column{0.55\textwidth}
+        \small
+        \textbf{Une ingénieure trop brillante}
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item \textbf{Mengia Caflisch}, ingénieure chez Crypto AG, analyse les générateurs HC-500.
+            \item Elle identifie des \textbf{faiblesses statistiques suspectes} dans les combineurs non-linéaires.
+            \item Elle conçoit un \textbf{algorithme robuste} pour remplacer le générateur compromis.
+        \end{itemize}
+
+        \vspace{0.1cm}
+        \textbf{La Contre-Attaque de la CIA}
+        \begin{itemize}\setlength{\itemsep}{0pt}
+            \item La CIA panique~: un algorithme robuste neutraliserait la backdoor.
+            \item \textbf{Faux audit académique} par \textbf{K-O. Widman} (alias \og Henry \fg{}), mathématicien recruté par la CIA.
+            \item Widman invalide le travail de Caflisch et maintient les algorithmes affaiblis.
+        \end{itemize}
+
+        \column{0.45\textwidth}
+        \begin{center}
+            \begin{alertblock}{Le Rôle de Widman}
+                \footnotesize
+                Widman justifiait académiquement les algorithmes affaiblis. Le haut degré algébrique apparent de $g$ masquait la vulnérabilité statistique lors des revues internes.
+            \end{alertblock}
+            \vspace{0.1cm}
+            \begin{block}{La Leçon}
+                \footnotesize
+                Même une ingénieure compétente à l'intérieur de l'entreprise n'a pas pu briser le cloisonnement.
+            \end{block}
+        \end{center}
+    \end{columns}
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[Vidéo : Sylvqin, L'Affaire Crypto AG, 2021]};
+    \end{tikzpicture}
+
+    \note{
+      \begin{itemize}
+        \item \textbf{Contexte :} Années 1980~; Caflisch travaille sur les générateurs HC-500.
+        \item \textbf{Découverte :} Elle repère des biais statistiques dans le combineur $g$.
+        \item \textbf{Initiative :} Elle conçoit un algorithme robuste de remplacement.
+        \item \textbf{Réponse CIA :} Kjell-Ove Widman (alias \og Henry \fg{}) mène un faux audit pour invalider son travail.
+        \item \textbf{Résultat :} La backdoor est préservée~; Caflisch ne sera jamais informée de la vérité.
+        \item \textbf{Ironie :} La menace la plus sérieuse pour l'opération ne vient pas d'un adversaire, mais d'une employée consciencieuse.
+      \end{itemize}
+    }
+\end{frame}
+
+% --- SLIDE 14 : HANS BÜHLER (1992) ---
 \begin{frame}{1992 : La Faille Humaine (L'Affaire Hans Bühler)}
     \begin{columns}
-        \column{0.6\textwidth}
+        \column{0.55\textwidth}
         \textbf{L'Arrestation en Iran}
         \begin{itemize}
             \item Hans Bühler, ingénieur commercial star de Crypto AG, est arrêté à Téhéran en \textbf{mars 1992}.
@@ -628,22 +680,19 @@
             \item Le gouvernement iranien suspecte l'équipement d'être compromis suite à des fuites liées à des assassinats politiques.
         \end{itemize}
 
-        \vspace{0.3cm}
+        \column{0.45\textwidth}
         \textbf{L'Opération Démasquée}
         \begin{itemize}
             \item Le \textbf{BND} paie la rançon/caution de \textbf{1\,M\,\$} à l'Iran~; la \textbf{CIA refuse} de contribuer.
             \item Ce différend financier provoque le \textit{Divorce Agreement} de 1993~: la CIA rachète la part du BND pour \textbf{17\,M\,\$}.
             \item Crypto AG licencie Bühler~; l'attention médiatique fait s'écrouler le mythe de la ``neutralité suisse''.
         \end{itemize}
-
-        \column{0.4\textwidth}
-        \begin{center}
-            \begin{alertblock}{La Menace Interne}
-                \small
-                \textbf{Mengia Caflisch} : Ingénieure brillante de Crypto AG. Trouvant les générateurs suspects, elle conçoit un algorithme réellement robuste. La CIA panique et déploie un faux audit académique (via Kjell-Ove Widman (alias \og Henry \fg{})) pour étouffer son travail et sauver l'opération.
-            \end{alertblock}
-        \end{center}
     \end{columns}
+
+    \vspace{0.5cm}
+    \begin{center}
+        \textit{Ce n'est pas un audit cryptographique qui révèle la faille, mais une erreur humaine et un différend financier entre agences de renseignement.}
+    \end{center}
 
     \begin{tikzpicture}[remember picture,overlay]
         \node[anchor=south east, xshift=-0.5cm, yshift=0.5cm, font=\tiny, text=gray!50] at (current page.south east) {[Vidéo : Sylvqin, L'Affaire Crypto AG, 2021]};
@@ -657,31 +706,33 @@
         \item \textbf{Rançon :} BND paie 1~M\$~; CIA refuse $\Rightarrow$ peur de griller la couverture.
         \item \textbf{Divorce 1993 :} CIA rachète part BND pour 17~M\$~; contrôle exclusif.
         \item \textbf{Fuite médiatique :} Bühler alerte la presse~; lien Zoug--BND découvert.
-                \item \textbf{Mengia Caflisch :} L'ingénieure qui a failli tout faire dérailler. Elle crée un code trop fort, obligeant la CIA à recourir au mathématicien K-O. Widman (alias \og Henry \fg{}) pour neutraliser sa rustine.
       \end{itemize}
     }
 \end{frame}
 
+% --- SLIDE 15 : DÉCLASSIFICATION 2020 ---
 \begin{frame}{2020 : La Déclassification et le Washington Post}
     \begin{columns}
-        \column{0.4\textwidth}
-        \begin{center}
-            \begin{alertblock}{La Menace Interne}
-                \small
-                	extbf{Mengia Caflisch} : Ingénieure brillante de Crypto AG. Trouvant les générateurs suspects, elle conçoit un algorithme réellement robuste. La CIA panique et déploie un faux audit académique (via Kjell-Ove Widman) pour étouffer son travail et sauver l'opération.
-            \end{alertblock}
-        \end{center}
-        \vspace{0.3cm}
-        \textbf{Le Coup de Maître}
+        \column{0.55\textwidth}
+        \textbf{L'Enquête \#CRYPTOLEAKS (Février 2020)}
         \begin{itemize}
-            \item Un rapport interne de la CIA décrit l'opération Rubicon comme \og Le coup de maître du renseignement du siècle \fg{}.
+            \item Enquête conjointe du \textit{Washington Post}, \textit{ZDF} et \textit{SRF}.
+            \item Documents CIA déclassifiés~: contrôle de \textbf{+40\%} des flux cryptés mondiaux (1970--1993).
+            \item Rapport interne CIA~: \og \textbf{Le coup de maître du renseignement du siècle} \fg{}.
+        \end{itemize}
+
+        \vspace{0.2cm}
+        \textbf{Épilogue}
+        \begin{itemize}
+            \item Crypto AG dissoute en \textbf{2018}, scindée en deux entités.
+            \item Le scandale relance le débat sur le chiffrement propriétaire vs. open-source.
         \end{itemize}
 
         \column{0.45\textwidth}
         \begin{center}
             \includegraphics[height=3.5cm]{images/hagelin.jpg}\\
             \vspace{0.1cm}
-            \small \textit{Machine classique Hagelin réputée inviolable.}
+            \small \textit{Série HC-500 réputée mathématiquement inviolable.}
         \end{center}
     \end{columns}
 
@@ -694,7 +745,7 @@
         \item \textbf{Preuve formelle :} Février 2020~; enquête Washington Post / ZDF / SRF (\#CRYPTOLEAKS).
         \item \textbf{Documents CIA :} Déclassifiés~; prouvent contrôle de +40\% des flux cryptés mondiaux (1970--1993).
         \item \textbf{Citation CIA :} ``Coup de maître du renseignement du siècle''.
-        \item \textbf{Liquidation :} Crypto AG dissoute en 2018.
+        \item \textbf{Liquidation :} Crypto AG dissoute en 2018, scindée en CyOne Security et Crypto International.
         \item \textbf{Cause racine :} Décalage mathématique subtil sur un polynôme de LFSR.
       \end{itemize}
     }
