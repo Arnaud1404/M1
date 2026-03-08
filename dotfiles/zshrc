@@ -84,6 +84,7 @@ ZSH_WEB_SEARCH_ENGINES=(
 )
 
 plugins=(
+	extract
 	git
  	z
 	sudo
