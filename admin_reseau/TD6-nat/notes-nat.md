@@ -1,5 +1,7 @@
 # TD6 - NAT
 
+[Notes du prof](https://aurelien-esnard.emi.u-bordeaux.fr/wiki/doku.php?id=admin:tp4)
+
 ## 1. Static NAT for `mpe` and `opeth`
 To allow machines with private addresses to communicate, we modify the source of the packet after routing.
 

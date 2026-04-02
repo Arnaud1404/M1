@@ -1,4 +1,7 @@
 ## TD2
+
+[Notes du prof](https://aurelien-esnard.emi.u-bordeaux.fr/wiki/doku.php?id=admin:tp2)
+
 ## Config de sous réseaux
 4 réseaux
 immortal, grave et syl sont des passerelles (gateway, ip forwarding)

@@ -1,6 +1,8 @@
 ### Scapy
 Launch REPL with `scapy`
 
+[Notes du prof](https://aurelien-esnard.emi.u-bordeaux.fr/wiki/doku.php?id=admin:tp3)
+
 ## Différence entre sr() et sr1()
 Les deux fonctions travaillent au niveau 3 (IP).
 
