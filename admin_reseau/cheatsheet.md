@@ -88,4 +88,6 @@ iface eth0 inet6 static
     # netmask 64
 ```
 
+tail /var/log/syslog
+
 
