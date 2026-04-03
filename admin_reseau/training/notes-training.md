@@ -37,6 +37,12 @@ ifconfig eth2 192.168.0.1/24
 et fix la table de routage
 `route add default gw 193.50.110.2`
 
+dt typo dans la table de routage
+Fix:
+```
+route del -net 147.61.0.0/24
+route add -net 147.16.0.0/24 dev eth0
+```
 nile en OUTPUT DROP
 Fix:
 `iptables -P OUTPUT ACCEPT`
