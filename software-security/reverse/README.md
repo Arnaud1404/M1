@@ -1,0 +1,1 @@
+Download and extract release archive [here](https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.0.4_build/ghidra_12.0.4_PUBLIC_20260303.zip).
